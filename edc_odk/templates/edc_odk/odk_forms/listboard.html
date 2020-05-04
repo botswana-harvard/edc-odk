@@ -31,7 +31,7 @@
     <th></th>
     <th>Identifier</th>
     <th></th>
-    <th>Consented</th>
+    <th>Consent version</th>
     <th>Modified</th>
     <th>Host</th>
     <!-- end results header -->
@@ -75,7 +75,7 @@
 
     <td>{{ result.object.subject_identifier }}</td>
     <td></td>
-    <td></td>  
+    <td style="text-align:center">{{ result.version }}</td>  
     <td>{{ result.object.modified|date:"SHORT_DATETIME_FORMAT" }}</td>
     <td>{{ result.hostname_created }}</td>
 

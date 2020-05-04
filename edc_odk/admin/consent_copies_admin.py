@@ -52,5 +52,7 @@ class ConsentCopiesAdmin(ModelAdminMixin, admin.ModelAdmin):
                 'subject_identifier', ]}),
         )
 
+    list_display = ('subject_identifier', 'version', 'created', )
+
     inlines = [ConsentImageInline, SpecimenConsentImageInline,
                NationalIdentityImageInline]

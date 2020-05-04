@@ -54,9 +54,9 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
                 messages.add_message(
                     self.request,
                     messages.SUCCESS,
-                    f'{final_count} records downloaded successfully from the '
-                    f'odk aggregrate server, {consent_records} consent copies'
-                    f'and {clinician_notes_records} clinician notes copies.')
+                    f'{final_count} record(s) downloaded successfully from the '
+                    f'odk aggregrate server, {consent_records} consent copie(s) '
+                    f'and {clinician_notes_records} clinician notes copie(s).')
             else:
                 messages.add_message(
                     self.request,
@@ -145,6 +145,7 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
             img_cls,
             'consent_copies',
             subject_identifier=None,
+            consent_version=None,
             subject_consent=None,
             subject_omang=None,
             specimen_consent=None)
@@ -231,7 +232,8 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
             elif data_dict.get('subject_identifier'):
                 try:
                     obj, created = model_cls.objects.get_or_create(
-                        subject_identifier=data_dict.get('subject_identifier'))
+                        subject_identifier=data_dict.get('subject_identifier'),
+                        version=data_dict.get('consent_version'))
                     if created:
                         self.create_image_obj_upload_image(
                             image_cls,

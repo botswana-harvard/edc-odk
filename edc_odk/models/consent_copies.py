@@ -8,6 +8,12 @@ from edc_identifier.model_mixins import UniqueSubjectIdentifierFieldMixin
 class ConsentCopies(
         UniqueSubjectIdentifierFieldMixin, SiteModelMixin, BaseUuidModel):
 
+    version = models.CharField(
+        verbose_name='Consent version',
+        max_length=10,
+        help_text='See \'Consent Type\' for consent versions by period.',
+        editable=False)
+
     class Meta:
         app_label = 'edc_odk'
         verbose_name = 'Consent Copies'
