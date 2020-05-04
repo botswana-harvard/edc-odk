@@ -80,55 +80,56 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
                                              'host': host},
                               auth=auth)
         root = ET.fromstring(result.text)
-        idlist, _ = [child for child in root]
         results = []
-        for uuid in [i.text for i in idlist]:
-            result = []
-            url = (base_format % {'form_id': form_id,
-                                  'api': 'downloadSubmission',
-                                  'host': host} +
-                   submission_format % {'group_name': 'data',
-                                        'uuid': uuid})
-            reply = requests.get(url, auth=auth)
-            root = ET.fromstring(reply.text)
+        if len(root) > 1:
+            idlist, _ = [child for child in root]
+            for uuid in [i.text for i in idlist]:
+                result = []
+                url = (base_format % {'form_id': form_id,
+                                      'api': 'downloadSubmission',
+                                      'host': host} +
+                       submission_format % {'group_name': 'data',
+                                            'uuid': uuid})
+                reply = requests.get(url, auth=auth)
+                root = ET.fromstring(reply.text)
 
-            child = [child for child in root]
-            subject_identifier = None
-            for data in child:
-                content = data.tag.replace(
-                    '{http://opendatakit.org/submissions}', '')
-                if content == 'data':
-                    elemlist = list(data[0][0])
-                    for info in elemlist:
-                        if 'subject_identifier' in info.tag:
-                            subject_identifier = info.text
+                child = [child for child in root]
+                subject_identifier = None
+                for data in child:
+                    content = data.tag.replace(
+                        '{http://opendatakit.org/submissions}', '')
+                    if content == 'data':
+                        elemlist = list(data[0][0])
+                        for info in elemlist:
+                            if 'subject_identifier' in info.tag:
+                                subject_identifier = info.text
+                            result.append(
+                                dict([(info.tag.replace(
+                                    '{http://opendatakit.org/submissions}', ''),
+                                    info.text)]))
+
+                    elif content == 'mediaFile':
+                        elemlist = list(data)
+
+                        filename = elemlist[0].text
+                        downloadUrl = elemlist[2].text
+                        key = None
+                        timestamp = get_utcnow()
+                        timestamp = timestamp.strftime("%Y%m%d_%H%M%S%f")
+
+                        image_groups = [
+                            'subject_omang', 'subject_consent',
+                            'specimen_consent', 'clinician_notes']
+                        for group in image_groups:
+                            if group in downloadUrl:
+                                key = group
+                                file_ext = os.path.splitext(filename)[1]
+                                filename = '%s-%s-image-%s%s' % (
+                                    subject_identifier, group, timestamp, file_ext)
+
                         result.append(
-                            dict([(info.tag.replace(
-                                '{http://opendatakit.org/submissions}', ''),
-                                info.text)]))
-
-                elif content == 'mediaFile':
-                    elemlist = list(data)
-
-                    filename = elemlist[0].text
-                    downloadUrl = elemlist[2].text
-                    key = None
-                    timestamp = get_utcnow()
-                    timestamp = timestamp.strftime("%Y%m%d_%H%M%S%f")
-
-                    image_groups = [
-                        'subject_omang', 'subject_consent',
-                        'specimen_consent', 'clinician_notes']
-                    for group in image_groups:
-                        if group in downloadUrl:
-                            key = group
-                            file_ext = os.path.splitext(filename)[1]
-                            filename = '%s-%s-image-%s%s' % (
-                                subject_identifier, group, timestamp, file_ext)
-
-                    result.append(
-                        dict([('%s' % key, [filename, downloadUrl])]))
-            results.append(result)
+                            dict([('%s' % key, [filename, downloadUrl])]))
+                results.append(result)
 
         return results
 
