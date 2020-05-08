@@ -40,7 +40,6 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
         return options
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
         final_count = 0
         consent_records = 0
         clinician_notes_records = 0
@@ -62,6 +61,7 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
                     self.request,
                     messages.INFO,
                     f'No new records found from the odk aggregrate.')
+        context = super().get_context_data(**kwargs)
 
         return context
 
