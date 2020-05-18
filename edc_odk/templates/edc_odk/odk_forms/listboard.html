@@ -3,7 +3,7 @@
 {% load odk_dashboard_extras %}
 
 {% block listboard_panel %}
-
+<!--
 	<a 	id="odk_pull_data"
 	 	title="Pull Data"
 	    class="btn btn-default btn-sm" data-toggle="tooltip"  data-placement="right"
@@ -11,6 +11,7 @@
 	    href="{{odk_listboard_url}}?pull_data=true" >
 	    <i class="fa fa-download" aria-hidden="true"></i> Pull Form Data
 	</a>
+-->
 	
 {% endblock listboard_panel %}
 
@@ -20,6 +21,7 @@
     <th>#</th>
     <th></th>
     <th>Subject Consent Copies</th>
+    <th>Subject Omang Copies</th>
     <th></th>
     <th>Identifier</th>
     <th></th>
@@ -54,6 +56,14 @@
 		<div class="btn-group">
 		{% if result.id %}
 			{% consent_copies_button result %}
+		{% endif %}
+		</div>
+	</td>
+
+	<td>
+		<div class="btn-group">
+		{% if result.id %}
+			{% omang_copies_button result %}
 		{% endif %}
 		</div>
 	</td>

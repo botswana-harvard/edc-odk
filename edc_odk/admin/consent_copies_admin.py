@@ -5,10 +5,10 @@ from .modeladmin_mixins import ModelAdminMixin
 from ..admin_site import edc_odk_admin
 from ..models import ConsentCopies
 from ..models import (
-    ConsentImage, SpecimenConsentImage, NationalIdentityImage)
+    ConsentImage, SpecimenConsentImage)
 from ..forms import ConsentCopiesForm
 from ..forms import (
-    ConsentImageForm, SpecimenConsentImageForm, NationalIdentityImageForm)
+    ConsentImageForm, SpecimenConsentImageForm)
 
 
 class ConsentImageInline(TabularInlineMixin, admin.TabularInline):
@@ -16,9 +16,15 @@ class ConsentImageInline(TabularInlineMixin, admin.TabularInline):
     form = ConsentImageForm
     extra = 0
 
-    fields = ('consent_image', audit_fields)
+    fields = ('consent_image', 'user_uploaded', 'datetime_captured',
+              'modified', 'hostname_created',)
 
-    readonly_fields = ('consent_image',)
+    def get_readonly_fields(self, request, obj=None):
+        fields = super().get_readonly_fields(request, obj)
+        fields = (
+            'consent_image', 'datetime_captured', 'user_uploaded') + fields
+
+        return fields
 
 
 class SpecimenConsentImageInline(TabularInlineMixin, admin.TabularInline):
@@ -26,19 +32,15 @@ class SpecimenConsentImageInline(TabularInlineMixin, admin.TabularInline):
     form = SpecimenConsentImageForm
     extra = 0
 
-    fields = ('specimen_consent_image', audit_fields)
+    fields = ('specimen_consent_image', 'user_uploaded', 'datetime_captured',
+              'modified', 'hostname_created',)
 
-    readonly_fields = ('specimen_consent_image',)
+    def get_readonly_fields(self, request, obj=None):
+        fields = super().get_readonly_fields(request, obj)
+        fields = (
+            'specimen_consent_image', 'datetime_captured', 'user_uploaded') + fields
 
-
-class NationalIdentityImageInline(TabularInlineMixin, admin.TabularInline):
-    model = NationalIdentityImage
-    form = NationalIdentityImageForm
-    extra = 0
-
-    fields = ('national_identity_image', audit_fields)
-
-    readonly_fields = ('national_identity_image',)
+        return fields
 
 
 @admin.register(ConsentCopies, site=edc_odk_admin)
@@ -54,5 +56,4 @@ class ConsentCopiesAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     list_display = ('subject_identifier', 'version', 'created', )
 
-    inlines = [ConsentImageInline, SpecimenConsentImageInline,
-               NationalIdentityImageInline]
+    inlines = [ConsentImageInline, SpecimenConsentImageInline]

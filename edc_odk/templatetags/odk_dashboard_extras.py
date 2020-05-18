@@ -22,3 +22,13 @@ def consent_copies_button(model_wrapper):
         add_consent_copies_href=model_wrapper.consent_copies.href,
         consent_copies_model_obj=model_wrapper.consent_copies_model_obj,
         title=' '.join(title),)
+
+
+@register.inclusion_tag('edc_odk/buttons/omang_copies_button.html')
+def omang_copies_button(model_wrapper):
+    title = ['subject copies of omang.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_omang_copies_href=model_wrapper.omang_copies.href,
+        omang_copies_model_obj=model_wrapper.omang_copies_model_obj,
+        title=' '.join(title),)

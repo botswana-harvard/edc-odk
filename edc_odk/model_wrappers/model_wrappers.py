@@ -3,8 +3,10 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from edc_model_wrapper import ModelWrapper
 
+from .omang_copies_wrapper_mixin import OmangCopiesModelWrapperMixin
 
-class ConsentCopiesModelWrapper(ModelWrapper):
+
+class ConsentCopiesModelWrapper(OmangCopiesModelWrapperMixin, ModelWrapper):
 
     model = 'edc_odk.consentcopies'
     consent_image_model = 'edc_odk.consentimage'

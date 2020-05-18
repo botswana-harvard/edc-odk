@@ -1,9 +1,11 @@
+from dateutil.parser import parse
 import os
 import requests
 from django.apps import apps as django_apps
 from django.core.exceptions import MultipleObjectsReturned
 from django.contrib import messages
 from django.db.utils import IntegrityError
+from django.db.models import ManyToOneRel
 from edc_base.view_mixins import EdcBaseViewMixin
 from edc_dashboard.views import ListboardView as BaseListboardView
 from edc_dashboard.view_mixins import ListboardFilterViewMixin, SearchFormViewMixin
@@ -40,27 +42,28 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
         return options
 
     def get_context_data(self, **kwargs):
-        final_count = 0
-        consent_records = 0
-        clinician_notes_records = 0
+        c_count, c_updated = self.pull_consent_images_data()
+        cn_count, cn_updated = self.pull_clinician_notes_data()
+        id_count, id_updated = self.pull_omang_images_data()
 
-        if self.request.GET.get('pull_data'):
-            consent_records += self.pull_consent_images_data()
-            clinician_notes_records += self.pull_clinician_notes_data()
-            final_count = consent_records + clinician_notes_records
-
-            if final_count > 0:
-                messages.add_message(
-                    self.request,
-                    messages.SUCCESS,
-                    f'{final_count} record(s) downloaded successfully from the '
-                    f'odk aggregrate server, {consent_records} consent copie(s) '
-                    f'and {clinician_notes_records} clinician notes copie(s).')
-            else:
-                messages.add_message(
-                    self.request,
-                    messages.INFO,
-                    f'No new records found from the odk aggregrate.')
+        count = c_count + cn_count + id_count
+        updated = c_updated + cn_updated + id_updated
+        if count > 0:
+            messages.add_message(
+                self.request,
+                messages.SUCCESS,
+                f'{count} record(s) downloaded successfully from the '
+                f'odk aggregrate server.')
+        if updated > 0:
+            messages.add_message(
+                self.request,
+                messages.SUCCESS,
+                f'{updated} existing record(s) have been updated ')
+        elif count == 0 and updated == 0:
+            messages.add_message(
+                self.request,
+                messages.INFO,
+                f'No new records found from the odk aggregrate.')
         context = super().get_context_data(**kwargs)
 
         return context
@@ -136,7 +139,6 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
     def pull_consent_images_data(self):
         result = self.pull_data_from_odk(form_id='consent_forms')
         img_cls = {'subject_consent': self.consent_image_model_cls,
-                   'subject_omang': self.national_id_image_model_cls,
                    'specimen_consent': self.specimen_consent_image_model_cls}
 
         return self.populate_model_objects(
@@ -148,12 +150,25 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
             subject_identifier=None,
             consent_version=None,
             subject_consent=None,
-            subject_omang=None,
             specimen_consent=None)
+
+    def pull_omang_images_data(self):
+        result = self.pull_data_from_odk(form_id='omang_forms')
+        img_cls = self.national_id_image_model_cls
+
+        return self.populate_model_objects(
+            None,
+            result,
+            django_apps.get_model('edc_odk.omangcopies'),
+            img_cls,
+            'omang_copies',
+            subject_identifier=None,
+            subject_omang=None)
 
     def pull_clinician_notes_data(self):
         form_ids = self.get_clinician_notes_form_id()
         record_count = 0
+        record_updated = 0
 
         for app_name, form_id in form_ids.items():
             img_cls = django_apps.get_model(
@@ -161,7 +176,7 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
 
             result = self.pull_data_from_odk(form_id=form_id)
 
-            record_count += self.populate_model_objects(
+            count, updated = self.populate_model_objects(
                 app_name,
                 result,
                 self.clinician_notes_model_cls(app_name),
@@ -171,11 +186,17 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
                 visit_code=None,
                 timepoint=None,
                 clinician_notes=None)
-        return record_count
+            record_count += count
+            record_updated += updated
+        return record_count, record_updated
 
     def populate_model_objects(
             self, app_name, result, model_cls, image_cls, image_cls_field, **fields):
+        updated = 0
         count = 0
+        audit_fields = {'username': None,
+                        'date_captured': None}
+        fields.update(audit_fields)
         for data in result:
 
             data_dict = dict()
@@ -214,7 +235,6 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
                         obj, created = model_cls.objects.get_or_create(
                             report_datetime=visit_obj.report_datetime,
                             **{f'{field_name}': visit_obj})
-
                         if created:
                             self.create_image_obj_upload_image(
                                 image_cls,
@@ -223,6 +243,14 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
                                 data_dict)
 
                             count += 1
+                        else:
+                            imgs_updated = self.update_existing_image_objs(
+                                image_cls,
+                                image_cls_field,
+                                obj,
+                                data_dict)
+                            if imgs_updated:
+                                updated += 1
 
                     except (MultipleObjectsReturned, IntegrityError) as e:
                         messages.add_message(
@@ -232,24 +260,55 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
 
             elif data_dict.get('subject_identifier'):
                 try:
-                    obj, created = model_cls.objects.get_or_create(
-                        subject_identifier=data_dict.get('subject_identifier'),
-                        version=data_dict.get('consent_version'))
+                    if data_dict.get('consent_version'):
+                        obj, created = model_cls.objects.get_or_create(
+                            subject_identifier=data_dict.get('subject_identifier'),
+                            version=data_dict.get('consent_version'))
+                    else:
+                        obj, created = model_cls.objects.get_or_create(
+                            subject_identifier=data_dict.get('subject_identifier'))
                     if created:
                         self.create_image_obj_upload_image(
                             image_cls,
                             image_cls_field,
                             obj,
                             data_dict)
-
                         count += 1
+                    else:
+                        imgs_updated = self.update_existing_image_objs(
+                            image_cls,
+                            image_cls_field,
+                            obj,
+                            data_dict)
+                        if imgs_updated:
+                            updated += 1
+
                 except (MultipleObjectsReturned, IntegrityError) as e:
                     messages.add_message(
                         self.request,
                         messages.ERROR,
                         e)
 
-        return count
+        return count, updated
+
+    def update_existing_image_objs(self, images_cls, field_name, obj, fields):
+        recent_captured = list()
+        related_images = [field.get_accessor_name() for field in
+                          obj._meta.get_fields() if issubclass(type(field), ManyToOneRel)]
+
+        for related_image in related_images:
+            recent_obj = getattr(
+                obj, related_image).order_by('-datetime_captured').first()
+            recent_captured.append(recent_obj.datetime_captured)
+
+        exisiting_datetime = max(recent_captured)
+
+        if parse(fields.get('date_captured')) > exisiting_datetime:
+            self.create_image_obj_upload_image(
+                images_cls, field_name, obj, fields)
+            return True
+        else:
+            return False
 
     def create_image_obj_upload_image(
             self, images_cls, field_name, obj, fields):
@@ -270,7 +329,9 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
             while i < len(fields.get(image_name)):
                 image_cls.objects.create(
                     **{f'{field_name}': obj},
-                    image=fields.get(image_name)[i])
+                    image=fields.get(image_name)[i],
+                    user_uploaded=fields.get('username'),
+                    datetime_captured=fields.get('date_captured'))
 
                 # Download and upload image
                 self.download_image_file_upload(

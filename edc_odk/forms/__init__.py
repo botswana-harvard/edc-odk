@@ -1,4 +1,5 @@
 from .consent_copies_form import ConsentCopiesForm
 from .consent_copies_form import ConsentImageForm
 from .consent_copies_form import SpecimenConsentImageForm
-from .consent_copies_form import NationalIdentityImageForm
+from .omang_copies_form import OmangCopiesForm
+from .omang_copies_form import NationalIdentityImageForm
