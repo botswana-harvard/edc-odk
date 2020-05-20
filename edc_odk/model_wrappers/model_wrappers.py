@@ -45,7 +45,8 @@ class ConsentCopiesModelWrapper(OmangCopiesModelWrapperMixin, ModelWrapper):
         consent copies model.
         """
         options = dict(
-            subject_identifier=self.object.subject_identifier)
+            subject_identifier=self.object.subject_identifier,
+            version=self.object.version)
         return options
 
     @property
@@ -54,5 +55,6 @@ class ConsentCopiesModelWrapper(OmangCopiesModelWrapperMixin, ModelWrapper):
         consent copies model instance.
         """
         options = dict(
-            subject_identifier=self.object.subject_identifier)
+            subject_identifier=self.object.subject_identifier,
+            version=self.object.version)
         return options

@@ -1,0 +1,23 @@
+{% if consent_copies %}
+
+<table class="table table-condensed">
+    <thead></thead>
+    <tbody>
+    	{% for consent_copy in consent_copies %}
+    		<tr>
+	        <td class="{% if consent_copy %}success{% else %}warning{% endif %}">
+		        {% with wrapped=consent_copy %}
+		            {% include 'edc_dashboard/controls/change_button.html' %}
+		        {% endwith %}
+			</td>
+	        <td class="{% if consent_copy %}success{% else %}warning{% endif %}">
+	            <span class="h6">{{ consent_copy.verbose_name|title }}&nbsp;v{{ consent_copy.version }}
+	           	<span class="text text-muted">created {{ consent_copy.object.created|date:"SHORT_DATE_FORMAT"}}</span>
+	           </span>
+	        </td>
+	      	</tr>
+		{% endfor %}
+    </tbody>
+</table>
+
+{% endif %}

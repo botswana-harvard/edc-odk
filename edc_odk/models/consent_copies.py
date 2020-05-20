@@ -3,11 +3,11 @@ from django.utils.html import mark_safe
 from edc_base.sites.site_model_mixin import SiteModelMixin
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.utils import get_utcnow
-from edc_identifier.model_mixins import UniqueSubjectIdentifierFieldMixin
+from edc_identifier.model_mixins import NonUniqueSubjectIdentifierModelMixin
 
 
 class ConsentCopies(
-        UniqueSubjectIdentifierFieldMixin, SiteModelMixin, BaseUuidModel):
+        NonUniqueSubjectIdentifierModelMixin, SiteModelMixin, BaseUuidModel):
 
     version = models.CharField(
         verbose_name='Consent version',
@@ -19,6 +19,7 @@ class ConsentCopies(
         app_label = 'edc_odk'
         verbose_name = 'Consent Copies'
         verbose_name_plural = 'Consent Copies'
+        unique_together = ('subject_identifier', 'version')
 
 
 class ConsentImage(BaseUuidModel):
