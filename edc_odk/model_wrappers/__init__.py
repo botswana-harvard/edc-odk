@@ -1,3 +1,4 @@
 from .model_wrappers import ConsentCopiesModelWrapper
 from .omang_copies_model_wrapper import OmangCopiesModelWrapper
 from .omang_copies_wrapper_mixin import OmangCopiesModelWrapperMixin
+from .specimen_consent_model_wrapper import SpecimenConsentModelWrapper

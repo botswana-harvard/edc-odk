@@ -43,11 +43,12 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
 
     def get_context_data(self, **kwargs):
         c_count, c_updated = self.pull_consent_images_data()
+        sc_count, sc_updated = self.pull_specimen_consent_images_data()
         cn_count, cn_updated = self.pull_clinician_notes_data()
         id_count, id_updated = self.pull_omang_images_data()
 
-        count = c_count + cn_count + id_count
-        updated = c_updated + cn_updated + id_updated
+        count = c_count + sc_count + cn_count + id_count
+        updated = c_updated + sc_updated + cn_updated + id_updated
         if count > 0:
             messages.add_message(
                 self.request,
@@ -138,8 +139,7 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
 
     def pull_consent_images_data(self):
         result = self.pull_data_from_odk(form_id='consent_forms')
-        img_cls = {'subject_consent': self.consent_image_model_cls,
-                   'specimen_consent': self.specimen_consent_image_model_cls}
+        img_cls = self.consent_image_model_cls
 
         return self.populate_model_objects(
             None,
@@ -149,7 +149,19 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
             'consent_copies',
             subject_identifier=None,
             consent_version=None,
-            subject_consent=None,
+            subject_consent=None)
+
+    def pull_specimen_consent_images_data(self):
+        result = self.pull_data_from_odk(form_id='specimen_consent_forms')
+        img_cls = self.specimen_consent_image_model_cls
+
+        return self.populate_model_objects(
+            None,
+            result,
+            django_apps.get_model('edc_odk.specimenconsentcopies'),
+            img_cls,
+            'consent_copies',
+            subject_identifier=None,
             specimen_consent=None)
 
     def pull_omang_images_data(self):

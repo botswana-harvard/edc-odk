@@ -3,6 +3,7 @@ from django.apps import apps as django_apps
 from django.conf import settings
 
 from ..model_wrappers import ConsentCopiesModelWrapper, OmangCopiesModelWrapper
+from ..model_wrappers import SpecimenConsentModelWrapper
 
 register = template.Library()
 
@@ -69,4 +70,25 @@ def omang_copies_dashboard_button(subject_identifier=None):
             subject_identifier=subject_identifier,
             add_omang_copies_href=omang_copies.href,
             omang_copies_model_obj=model_obj,
+            title=' '.join(title),)
+
+
+@register.inclusion_tag('edc_odk/odk_forms/sidebar/specimen_consent_copies.html')
+def specimen_consent_copies_dash_button(subject_identifier=None):
+    title = ['subject specimen consent copies.']
+    specimen_consent_cls = django_apps.get_model(
+        'edc_odk.specimenconsentcopies')
+    try:
+        model_obj = specimen_consent_cls.objects.get(
+            subject_identifier=subject_identifier)
+    except specimen_consent_cls.DoesNotExist:
+        return None
+    else:
+        specimen_consent_copies = SpecimenConsentModelWrapper(
+            model_obj=model_obj)
+
+        return dict(
+            subject_identifier=subject_identifier,
+            add_specimen_consent_copies_href=specimen_consent_copies.href,
+            specimen_consent_copies_model_obj=model_obj,
             title=' '.join(title),)

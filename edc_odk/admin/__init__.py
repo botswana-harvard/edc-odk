@@ -1,3 +1,3 @@
 from .consent_copies_admin import ConsentCopiesAdmin
 from .omang_copies_admin import OmangCopiesAdmin
-
+from .specimen_consent_copies_admin import SpecimenConsentCopiesAdmin

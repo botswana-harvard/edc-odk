@@ -4,11 +4,9 @@ from edc_model_admin import TabularInlineMixin, audit_fields
 from .modeladmin_mixins import ModelAdminMixin
 from ..admin_site import edc_odk_admin
 from ..models import ConsentCopies
-from ..models import (
-    ConsentImage, SpecimenConsentImage)
+from ..models import ConsentImage
 from ..forms import ConsentCopiesForm
-from ..forms import (
-    ConsentImageForm, SpecimenConsentImageForm)
+from ..forms import ConsentImageForm
 
 
 class ConsentImageInline(TabularInlineMixin, admin.TabularInline):
@@ -27,22 +25,6 @@ class ConsentImageInline(TabularInlineMixin, admin.TabularInline):
         return fields
 
 
-class SpecimenConsentImageInline(TabularInlineMixin, admin.TabularInline):
-    model = SpecimenConsentImage
-    form = SpecimenConsentImageForm
-    extra = 0
-
-    fields = ('specimen_consent_image', 'user_uploaded', 'datetime_captured',
-              'modified', 'hostname_created',)
-
-    def get_readonly_fields(self, request, obj=None):
-        fields = super().get_readonly_fields(request, obj)
-        fields = (
-            'specimen_consent_image', 'datetime_captured', 'user_uploaded') + fields
-
-        return fields
-
-
 @admin.register(ConsentCopies, site=edc_odk_admin)
 class ConsentCopiesAdmin(ModelAdminMixin, admin.ModelAdmin):
 
@@ -56,4 +38,4 @@ class ConsentCopiesAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     list_display = ('subject_identifier', 'version', 'created', )
 
-    inlines = [ConsentImageInline, SpecimenConsentImageInline]
+    inlines = [ConsentImageInline]

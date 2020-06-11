@@ -3,11 +3,11 @@ from django import forms
 from edc_base.sites import SiteModelFormMixin
 from edc_form_validators import FormValidatorMixin
 
-from ..models import ConsentCopies
-from ..models import ConsentImage
+from ..models import SpecimenConsentCopies
+from ..models import SpecimenConsentImage
 
 
-class ConsentCopiesForm(
+class SpecimenConsentCopiesForm(
         SiteModelFormMixin, FormValidatorMixin, forms.ModelForm):
 
     subject_identifier = forms.CharField(
@@ -16,12 +16,12 @@ class ConsentCopiesForm(
         required=False)
 
     class Meta:
-        model = ConsentCopies
+        model = SpecimenConsentCopies
         fields = '__all__'
 
 
-class ConsentImageForm(forms.ModelForm):
+class SpecimenConsentImageForm(forms.ModelForm):
 
     class Meta:
-        model = ConsentImage
+        model = SpecimenConsentImage
         fields = '__all__'
