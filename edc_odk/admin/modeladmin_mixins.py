@@ -8,13 +8,15 @@ from edc_model_admin import (
 
 from edc_metadata import NextFormGetter
 
+from .stampimage_action_mixin import StampImageActionMixin
+
 
 class ModelAdminMixin(
         ModelAdminNextUrlRedirectMixin, ModelAdminFormInstructionsMixin,
         ModelAdminFormAutoNumberMixin, ModelAdminRevisionMixin,
         ModelAdminAuditFieldsMixin, ModelAdminReadOnlyMixin,
         ModelAdminInstitutionMixin, ModelAdminRedirectOnDeleteMixin,
-        ModelAdminSiteMixin):
+        ModelAdminSiteMixin, StampImageActionMixin):
 
     list_per_page = 10
     date_hierarchy = 'modified'

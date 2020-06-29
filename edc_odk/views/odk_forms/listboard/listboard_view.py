@@ -13,6 +13,7 @@ from edc_navbar import NavbarViewMixin
 from edc_base.utils import get_utcnow
 from requests.auth import HTTPDigestAuth
 import xml.etree.ElementTree as ET
+from PIL import Image
 
 from edc_odk.model_wrappers import ConsentCopiesModelWrapper
 from edc_odk.conn_options import ODKConnectionOptions
@@ -339,22 +340,35 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
 
             i = 0
             while i < len(fields.get(image_name)):
+
+                upload_to = image_cls.image.field.upload_to
+
                 image_cls.objects.create(
                     **{f'{field_name}': obj},
-                    image=fields.get(image_name)[i],
+                    image=upload_to + fields.get(image_name)[i],
                     user_uploaded=fields.get('username'),
                     datetime_captured=fields.get('date_captured'))
 
                 # Download and upload image
                 self.download_image_file_upload(
                     fields.get(image_url)[i],
-                    fields.get(image_name)[i])
+                    fields.get(image_name)[i],
+                    upload_to)
+
+                # Add a stamp to the image upload
+                path = 'media/%(upload_dir)s%(filename)s' % {
+                    'filename': fields.get(image_name)[i],
+                    'upload_dir': upload_to}
+                self.add_image_stamp(image_path=path)
                 i += 1
 
-    def download_image_file_upload(self, downloadUrl, filename):
+    def download_image_file_upload(self, downloadUrl, filename, upload_to):
         r = requests.get(downloadUrl, stream=True)
+        image_path = 'media/%(upload_dir)s' % {'upload_dir': upload_to}
+        if not os.path.exists(image_path):
+            os.makedirs(image_path)
         if r.status_code == 200:
-            with open('media/%(filename)s' % {'filename': filename}, 'wb') as f:
+            with open('%(path)s%(filename)s' % {'path': image_path, 'filename': filename}, 'wb') as f:
                 f.write(r.content)
 
     def get_app_visit_model_obj(
@@ -414,3 +428,14 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
         if clinician_notes_model:
             return django_apps.get_model(
                 '%s.%s' % (app_name, clinician_notes_model))
+
+    def add_image_stamp(self, image_path=None, position=(25, 25)):
+        base_image = Image.open(image_path)
+        stamp = Image.open('media/stamp/true-copy.png')
+        width, height = base_image.size
+        stamp_width, stamp_height = stamp.size
+        position = (width - (stamp_width + 25), 25)
+
+        # add stamp to image
+        base_image.paste(stamp, position, mask=stamp)
+        base_image.save(image_path)

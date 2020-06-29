@@ -21,7 +21,7 @@ class SpecimenConsentImage(BaseUuidModel):
         SpecimenConsentCopies,
         on_delete=models.PROTECT,
         related_name='specimen_consent_images',)
-    image = models.ImageField(upload_to='media/')
+    image = models.ImageField(upload_to='specimen_consent/')
     user_uploaded = models.CharField(
         max_length=50,
         blank=True,

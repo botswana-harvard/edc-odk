@@ -28,7 +28,7 @@ class ConsentImage(BaseUuidModel):
         ConsentCopies,
         on_delete=models.PROTECT,
         related_name='consent_images',)
-    image = models.ImageField(upload_to='media/')
+    image = models.ImageField(upload_to='consent_copies/')
     user_uploaded = models.CharField(
         max_length=50,
         blank=True,

@@ -21,7 +21,7 @@ class NationalIdentityImage(BaseUuidModel):
         OmangCopies,
         on_delete=models.PROTECT,
         related_name='national_id_images',)
-    image = models.ImageField(upload_to='media/')
+    image = models.ImageField(upload_to='omang_copies/')
     user_uploaded = models.CharField(
         max_length=50,
         blank=True,
