@@ -15,11 +15,10 @@ class StampImageActionMixin:
                     image_path = image.image.path
 
                     base_image = Image.open(image_path)
-                    stamp = Image.open('media/stamp/stamp.png')
+                    stamp = Image.open('media/stamp/true-copy.png')
                     width, height = base_image.size
                     stamp_width, stamp_height = stamp.size
-                    horizontal = width - (stamp_width + 25)
-                    position = (0, 0, stamp_width, stamp_height)
+                    position = (width - (stamp_width + 25), 25)
 
                     # add stamp to image
                     base_image.paste(stamp, position, mask=stamp)
