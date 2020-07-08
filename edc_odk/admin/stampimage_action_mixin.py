@@ -16,9 +16,19 @@ class StampImageActionMixin:
 
                     base_image = Image.open(image_path)
                     stamp = Image.open('media/stamp/true-copy.png')
+                    stamp = stamp.resize((600, 600))
+
                     width, height = base_image.size
                     stamp_width, stamp_height = stamp.size
-                    position = (width - (stamp_width + 25), 25)
+                    if width < height:
+                        pos_width = round(width/2)-round(stamp_width/2)
+                        pos_height = height-stamp_height
+                        position = (pos_width, pos_height)
+                    elif width > height:
+                        stamp = stamp.rotate(90)
+                        pos_width = width-stamp_width
+                        pos_height = round(height/2)-round(stamp_height/2)
+                        position = (pos_width, pos_height)
 
                     # add stamp to image
                     base_image.paste(stamp, position, mask=stamp)
