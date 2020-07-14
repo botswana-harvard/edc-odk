@@ -1,0 +1,12 @@
+<a id="omangcopies_add_{{ subject_identifier }}" 
+     title="{{ title }}"
+
+    {% if omang_copies_model_obj %}
+        class="btn btn-success btn-sm" data-toggle="tooltip"  data-placement="right"
+        href="{{ add_omang_copies_href }}">
+    {% else %}
+        class="btn btn-warning btn-sm" data-toggle="tooltip"  data-placement="right"
+        href="{{ add_omang_copies_href }}">
+    {% endif %}
+        Copies of Omang
+</a>

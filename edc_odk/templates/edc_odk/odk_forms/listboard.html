@@ -1,0 +1,84 @@
+{% extends "edc_dashboard/listboard.html" %}
+{% load edc_base_extras %}
+{% load odk_dashboard_extras %}
+
+{% block listboard_panel %}
+<!--
+	<a 	id="odk_pull_data"
+	 	title="Pull Data"
+	    class="btn btn-default btn-sm" data-toggle="tooltip"  data-placement="right"
+	    style="margin-left:20px;"
+	    href="{{odk_listboard_url}}?pull_data=true" >
+	    <i class="fa fa-download" aria-hidden="true"></i> Pull Form Data
+	</a>
+-->
+	
+{% endblock listboard_panel %}
+
+{% block listboard_table_header %}
+
+    <!-- begin results header -->
+    <th>#</th>
+    <th></th>
+    <th>Subject Consent Copies</th>
+    <th>Subject Omang Copies</th>
+    <th></th>
+    <th>Identifier</th>
+    <th></th>
+    <th>Consent version</th>
+    <th>Modified</th>
+    <th>Host</th>
+    <!-- end results header -->
+
+{% endblock listboard_table_header %}
+	
+{% block listboard_table_button_column %}
+	{% comment %}
+
+    result: model_wrapper, usually the SubjectConsentModelWrapper
+        Required attributes:
+            subject_identifier
+            href: (model_wrapper.href)
+
+	{% endcomment %}
+	<td style="white-space: nowrap">
+    <div class="btn-group">
+    
+    {% if result.id %}
+         <a id="btn-subject-dashboard-{{result.object.subject_identifier}}" class="btn btn-primary btn-sm" role="button"   
+        	title="Go to subject's dashboard" href="{% url subject_dashboard_url result.object.subject_identifier %}">
+        <i class="far fa-user-circle fa-sm"></i> Dashboard  <i class="fa fa-share"></i></a>
+    {% endif %}
+    </div>
+	</td>
+	
+	<td>
+		<div class="btn-group">
+		{% if result.id %}
+			{% consent_copies_button result %}
+		{% endif %}
+		</div>
+	</td>
+
+	<td>
+		<div class="btn-group">
+		{% if result.id %}
+			{% omang_copies_button result %}
+		{% endif %}
+		</div>
+	</td>
+
+	<td></td>
+{% endblock listboard_table_button_column %}
+
+{% block listboard_table_columns %}
+	
+	
+
+    <td>{{ result.object.subject_identifier }}</td>
+    <td></td>
+    <td style="text-align:center">{{ result.version }}</td>  
+    <td>{{ result.object.modified|date:"SHORT_DATETIME_FORMAT" }}</td>
+    <td>{{ result.hostname_created }}</td>
+
+{% endblock listboard_table_columns %}
