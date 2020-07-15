@@ -1,0 +1,62 @@
+{% extends 'edc_odk/odk_forms/base.html' %}
+{% load static %}
+
+{% block scripts %}
+{{ block.super }}
+
+{% endblock scripts %}
+
+
+{% block main %}
+
+<style>
+	img {
+	padding: 4px;}
+</style>
+
+
+{{ block.super }}
+
+<div class="container bg-3 ">
+
+<h3>Getting started with ODK</h3>
+<ul>
+	<li><b>ODK Collect (Mobile App)</b></li>
+	<ul style="list-style-type:none">
+		<li><b>Connecting to the ODK aggregate server</b></li>
+		<br/>
+		<ol>
+			<li class="col-sm-6">From the Action Button <b>(⋮)</b>, select General Settings<br/>
+			<img style="float:left" src="{% static "edc_odk/images/main-menu-settings.png" %}" alt="My image" width="200">
+			<img style="float:left" src="{% static "edc_odk/images/menu-general-settings.png" %}" alt="My image" width="200">
+			</li>
+			<li class="col-sm-6">Select Server<br/>
+			<img src="{% static "edc_odk/images/general-settings-server.png" %}" alt="My image" width="200">
+			</li>
+			<div class="clearfix">&nbsp;</div>
+			<li>Select Type, and set it to ODK Aggregate<br/>
+			<img src="{% static "edc_odk/images/server-settings-type-aggregate.png" %}" alt="My image" width="200">
+			<img src="{% static "edc_odk/images/server-settings-type-modal.png" %}" alt="My image" width="200">
+			</li>
+			<div class="clearfix">&nbsp;</div>
+			<li>Edit ODK Aggregate settings</li>
+			<br/>
+			<ul>
+				<li class="col-sm-4">Edit Server URL <br/> (e.g 'https://odk-live.bhp.org.bw/')<br/>
+				<img src="{% static "edc_odk/images/server-settings-server-url.png" %}" alt="My image" width="200">
+				</li>
+				<li class="col-sm-4">Edit username <br/> (e.g 'odk_user')<br/>
+				<img src="{% static "edc_odk/images/server-settings-odk-username.png" %}" alt="My image" width="200">
+				</li>
+				<li class="col-sm-4">Edit password <br/> (e.g 'password')<br/>
+				<img src="{% static "edc_odk/images/server-settings-odk-password.png" %}" alt="My image" width="200">
+				</li>
+			</ul>
+			<div class="clearfix">&nbsp;</div>
+		</ol>
+	</ul>
+</ul>
+
+</div>
+
+{% endblock main %}
