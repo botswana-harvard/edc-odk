@@ -76,7 +76,7 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
         user = self.conn_options.user
         pw = self.conn_options.password
 
-        base_format = 'http://%(host)s/view/%(api)s?formId=%(form_id)s'
+        base_format = 'https://%(host)s/view/%(api)s?formId=%(form_id)s'
         submission_format = '[@version=null and @uiVersion=null]/%(group_name)s[@key=%(uuid)s]'
 
         auth = HTTPDigestAuth(user, pw)
