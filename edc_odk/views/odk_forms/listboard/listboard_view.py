@@ -135,7 +135,6 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
                         result.append(
                             dict([('%s' % key, [filename, downloadUrl])]))
                 results.append(result)
-
         return results
 
     def pull_consent_images_data(self):
@@ -363,7 +362,10 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
                 i += 1
 
     def download_image_file_upload(self, downloadUrl, filename, upload_to):
-        r = requests.get(downloadUrl, stream=True)
+        user = self.conn_options.user
+        pw = self.conn_options.password
+        auth = HTTPDigestAuth(user, pw)
+        r = requests.get(downloadUrl, auth=auth, stream=True)
         image_path = 'media/%(upload_dir)s' % {'upload_dir': upload_to}
         if not os.path.exists(image_path):
             os.makedirs(image_path)
