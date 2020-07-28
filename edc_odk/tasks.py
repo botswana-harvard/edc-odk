@@ -1,14 +1,11 @@
-import configparser
-from django.conf import settings
+from .classes import PullODKData
 
 
-class ODKConnectionOptions:
-    config = configparser.ConfigParser()
-
-    settings_dict = settings.ODK_CONFIGURATION
-    config_file = settings_dict['OPTIONS'].get('read_default_file')
-    config.read(config_file)
-    if config_file:
-        host = config['read']['host']
-        user = config['read']['user']
-        password = config['read']['pw']
+def pull_all_data_from_odk():
+    """
+    Pulls all form submissions data from the odk aggregate server
+    """
+    PullODKData().pull_clinician_notes_data()
+    PullODKData().pull_consent_images_data()
+    PullODKData().pull_omang_images_data()
+    PullODKData().pull_specimen_consent_images_data()
