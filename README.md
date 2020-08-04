@@ -8,13 +8,21 @@ A multiprocessing task queue for Django
 
 ## `Installation`
 
-pip install django-q
+pip install Celery
 
 pip install edc-odk
 
+## `Install RabbitMQ for the celery broker`
+
+apt-get install rabbitmq-server
+
+brew install rabbitmq | on macos
+
+Start the rabbitMQ server
+
 ### `Usage`
 
-Add `django_q` and `edc_odk.apps.AppConfig` to INSTALLED_APPS in your Django project settings, django-q configuration is handled via the Q_CLUSTER dictionary; all configurations are optional see [https://django-q.readthedocs.io/en/latest/configure.html](https://django-q.readthedocs.io/en/latest/configure.html) for configuration options.
+Add `edc_odk.apps.AppConfig` to INSTALLED_APPS and celery configurations in your Django project settings.
 
 	`settings.py`
 	
@@ -35,13 +43,9 @@ Add `django_q` and `edc_odk.apps.AppConfig` to INSTALLED_APPS in your Django pro
 		
 		BASE_FORMAT = 'https://%(host)s/view/%(api)s?formId=%(form_id)s'
 		
-		# django_q configuration
-		Q_CLUSTER = {
-		    'name': 'your_app_name',
-		    'workers': 4,
-		    'orm': 'default'
-		    ....
-		}
+		# celery configuration
+		CELERY_BROKER_URL = 'amqp://localhost'
+		CELERY_INCLUDE = ['myapp.tasks', ]
 		
 		DASHBOARD_URL_NAMES = {
 			...
@@ -60,6 +64,15 @@ Add `django_q` and `edc_odk.apps.AppConfig` to INSTALLED_APPS in your Django pro
 		host = '' # This hold the ip or domain name your odk aggregate instance
 		user = '' # The admin username for your instance
 		pw = **** # The admin user password
+
+	`celery.py` Setup your celery instance in your proj app dir
+		import os
+		from celery import Celery
+		os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproj.settings')
+		
+		app = Celery('myproj')
+		app.config_from_object('django.conf:settings', namespace='CELERY')
+		app.autodiscover_tasks()
 
 Run migrations:
 
