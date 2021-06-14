@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'edc_base.apps.AppConfig',
+    'edc_device.apps.AppConfig',
+    'edc_visit_tracking.apps.AppConfig',
     'edc_odk.apps.AppConfig',
 ]
 
@@ -93,6 +96,8 @@ ODK_CONFIGURATION = {
     },
 }
 
+ATTACH_FORMAT = ''
+BASE_FORMAT = ''
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -142,3 +147,17 @@ DASHBOARD_URL_NAMES = {
 DASHBOARD_BASE_TEMPLATES = {
     'odk_listboard_template': 'edc_odk/odk_forms/listboard.html',
 }
+
+if 'test' in sys.argv:
+
+    class DisableMigrations:
+
+        def __contains__(self, item):
+            return True
+
+        def __getitem__(self, item):
+            return None
+
+    MIGRATION_MODULES = DisableMigrations()
+    PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher',)
+    DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'

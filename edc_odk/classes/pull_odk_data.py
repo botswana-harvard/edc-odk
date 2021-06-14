@@ -379,9 +379,9 @@ class PullODKData:
                     visit_code=visit_code,
                     visit_code_sequence=timepoint)
             except visit_model_cls.DoesNotExist:
-                raise Exception(
-                    f'Failed to get visit for {subject_identifier}, at '
-                    f'visit {visit_code}. Visit does not exist.')
+                message = (f'Failed to get visit for {subject_identifier}, at '
+                           f'visit {visit_code}. Visit does not exist.')
+                raise Exception(message)
 
         return visit_model_obj
 
