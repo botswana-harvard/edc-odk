@@ -2,7 +2,7 @@ import logging
 from celery import shared_task
 from celery.signals import worker_process_init
 
-from .classes import PullODKData
+from .classes import PullODKData, ODKCentralPullData
 
 logger = logging.getLogger(__name__)
 
@@ -22,3 +22,8 @@ def pull_all_data_from_odk():
     PullODKData().pull_consent_images_data()
     PullODKData().pull_omang_images_data()
     PullODKData().pull_specimen_consent_images_data()
+
+
+@shared_task
+def pull_all_data_from_odkcentral():
+    ODKCentralPullData().pull_clinician_notes_data()

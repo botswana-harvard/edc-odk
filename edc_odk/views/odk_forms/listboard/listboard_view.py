@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from edc_base.view_mixins import EdcBaseViewMixin
 from edc_dashboard.views import ListboardView as BaseListboardView
@@ -6,7 +7,7 @@ from edc_navbar import NavbarViewMixin
 
 from edc_odk.model_wrappers import ConsentCopiesModelWrapper
 
-from ....classes import PullODKData
+from ....classes import PullODKData, ODKCentralPullData
 
 
 class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
@@ -23,7 +24,6 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
     navbar_name = 'edc_odk_forms'
     navbar_selected_item = 'edc_odk_forms'
     search_form_url = 'odk_listboard_url'
-    odk_copies = PullODKData
 
     def get_queryset_filter_options(self, request, *args, **kwargs):
         options = super().get_queryset_filter_options(request, *args, **kwargs)
@@ -49,7 +49,7 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
                 self.request,
                 messages.SUCCESS,
                 f'{count} record(s) downloaded successfully from the '
-                f'odk aggregrate server.')
+                f'odk aggregrate/central server.')
         if updated > 0:
             messages.add_message(
                 self.request,
@@ -59,7 +59,18 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
             messages.add_message(
                 self.request,
                 messages.INFO,
-                f'No new records found from the odk aggregrate.')
+                f'No new records found from the odk aggregrate/central server.')
         context = super().get_context_data(**kwargs)
 
         return context
+
+    @property
+    def odk_copies(self):
+        odk_copies = PullODKData
+        server_type = getattr(settings, 'ODK_SERVER_TYPE', '')
+        if server_type:
+            if server_type == 'aggregate':
+                odk_copies = PullODKData
+            if server_type == 'central':
+                odk_copies = ODKCentralPullData
+        return odk_copies
