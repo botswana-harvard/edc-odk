@@ -1,10 +1,10 @@
 import configparser
+import logging
 import os
 import requests
 import xml.etree.ElementTree as ET
 
 from dateutil.parser import parse
-from django.contrib import messages
 from django.conf import settings
 from django.apps import apps as django_apps
 from django.db.utils import IntegrityError
@@ -381,7 +381,7 @@ class PullODKData:
             except visit_model_cls.DoesNotExist:
                 message = (f'Failed to get visit for {subject_identifier}, at '
                            f'visit {visit_code}. Visit does not exist.')
-                raise Exception(message)
+                logging.exception(message)
 
         return visit_model_obj
 
@@ -421,7 +421,7 @@ class PullODKData:
             return django_apps.get_model(
                 '%s.%s' % (app_name, clinician_notes_model))
 
-    def add_image_stamp(self, image_path=None, position=(25, 25)):
+    def add_image_stamp(self, image_path=None, position=(25, 25), resize=(600, 600)):
         """
         Superimpose image of a stamp over copy of the base image
         @param image_path: dir to base image
@@ -429,7 +429,8 @@ class PullODKData:
         """
         base_image = Image.open(image_path)
         stamp = Image.open('media/stamp/true-copy.png')
-        stamp = stamp.resize((600, 600))
+        if resize:
+            stamp = stamp.resize(resize)
 
         width, height = base_image.size
         stamp_width, stamp_height = stamp.size

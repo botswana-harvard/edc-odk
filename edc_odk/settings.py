@@ -13,10 +13,18 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import sys
 
+import configparser
+from django.core.management.color import color_style
+
+# from .logging import LOGGING
+style = color_style()
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 APP_NAME = 'edc_odk'
+
+ETC_DIR = os.path.join('/etc/', APP_NAME)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -30,6 +38,21 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 SITE_ID = 1
+
+CONFIG_FILE = f'{APP_NAME}.ini'
+
+CONFIG_PATH = os.path.join(ETC_DIR, CONFIG_FILE)
+sys.stdout.write(style.SUCCESS(f'  * Reading config from {CONFIG_FILE}\n'))
+config = configparser.ConfigParser()
+config.read(CONFIG_PATH)
+
+# email configurations
+EMAIL_BACKEND = config['email_conf'].get('email_backend')
+EMAIL_HOST = config['email_conf'].get('email_host')
+EMAIL_USE_TLS = config['email_conf'].get('email_use_tls')
+EMAIL_PORT = config['email_conf'].get('email_port')
+EMAIL_HOST_USER = config['email_conf'].get('email_user')
+EMAIL_HOST_PASSWORD = config['email_conf'].get('email_host_pwd')
 
 # Application definition
 
