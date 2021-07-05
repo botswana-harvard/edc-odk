@@ -291,7 +291,7 @@ class ODKCentralPullData(PullODKData):
                 path = 'media/%(upload_dir)s%(filename)s' % {
                     'filename': media_name,
                     'upload_dir': upload_to}
-                self.add_image_stamp(image_path=path, resize=(80, 80))
+                self.add_image_stamp(image_path=path, resize=(150, 150))
 
     def download_image_file_upload(self, downloadUrl, filename, upload_to):
         session_token = self.get_email_token()
