@@ -3,6 +3,7 @@ import logging
 import os
 import requests
 import xml.etree.ElementTree as ET
+import PIL
 
 from dateutil.parser import parse
 from django.conf import settings
@@ -19,6 +20,7 @@ class PullODKData:
     Pull image copies from the odk server, create relevant model objects.
     """
 
+    logger = logging.getLogger(__name__)
     base_format = settings.BASE_FORMAT
     submission_format = '[@version=null and @uiVersion=null]/%(group_name)s[@key=%(uuid)s]'
 
@@ -381,7 +383,7 @@ class PullODKData:
             except visit_model_cls.DoesNotExist:
                 message = (f'Failed to get visit for {subject_identifier}, at '
                            f'visit {visit_code}. Visit does not exist.')
-                logging.exception(message)
+                logging.error(message)
 
         return visit_model_obj
 
@@ -430,7 +432,7 @@ class PullODKData:
         base_image = Image.open(image_path)
         stamp = Image.open('media/stamp/true-copy.png')
         if resize:
-            stamp = stamp.resize(resize)
+            stamp = stamp.resize(resize, PIL.Image.ANTIALIAS)
 
         width, height = base_image.size
         stamp_width, stamp_height = stamp.size
