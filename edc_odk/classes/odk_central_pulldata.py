@@ -247,7 +247,8 @@ class ODKCentralPullData(PullODKData):
                     try:
                         obj, created = model_cls.objects.get_or_create(
                             report_datetime__gte=visit_obj.report_datetime,
-                            **{f'{field_name}': visit_obj})
+                            **{f'{field_name}': visit_obj},
+                            defaults={'report_datetime': visit_obj.report_datetime})
                         if created:
                             self.create_image_obj_upload_image(
                                 image_cls,
