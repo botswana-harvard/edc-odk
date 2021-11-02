@@ -9,7 +9,8 @@ from dateutil.parser import parse
 from django.conf import settings
 from django.apps import apps as django_apps
 from django.db.utils import IntegrityError
-from django.db.models import ManyToOneRel
+from django.db.models import ManyToOneRel, Q
+from edc_appointment.constants import NEW_APPT
 from edc_base.utils import get_utcnow
 from requests.auth import HTTPDigestAuth
 from PIL import Image
@@ -376,12 +377,13 @@ class PullODKData:
         if visit_models:
             visit_model_cls = django_apps.get_model(
                 visit_models[1])
-            try:
-                visit_model_obj = visit_model_cls.objects.get(
-                    subject_identifier=subject_identifier,
-                    visit_code=visit_code,
-                    visit_code_sequence=timepoint)
-            except visit_model_cls.DoesNotExist:
+
+            visit_model_obj = visit_model_cls.objects.filter(
+                subject_identifier=subject_identifier,
+                visit_code=visit_code,
+                visit_code_sequence=timepoint).exclude(
+                    appointment__appt_status=NEW_APPT).order_by('-report_datetime').last()
+            if not visit_model_obj:
                 message = (f'Failed to get visit for {subject_identifier}, at '
                            f'visit {visit_code}. Visit does not exist.')
                 logging.error(message)
