@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.contrib import messages
 from edc_base.view_mixins import EdcBaseViewMixin
 from edc_dashboard.views import ListboardView as BaseListboardView
 from edc_dashboard.view_mixins import ListboardFilterViewMixin, SearchFormViewMixin
@@ -31,38 +30,6 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
             options.update(
                 {'subject_identifier': kwargs.get('subject_identifier')})
         return options
-
-    def get_context_data(self, **kwargs):
-        c_count, c_updated = self.odk_copies(
-            request=self.request).pull_consent_images_data()
-        sc_count, sc_updated = self.odk_copies(
-            request=self.request).pull_specimen_consent_images_data()
-        cn_count, cn_updated = self.odk_copies(
-            request=self.request).pull_clinician_notes_data()
-        id_count, id_updated = self.odk_copies(
-            request=self.request).pull_omang_images_data()
-
-        count = c_count + sc_count + cn_count + id_count
-        updated = c_updated + sc_updated + cn_updated + id_updated
-        if count > 0:
-            messages.add_message(
-                self.request,
-                messages.SUCCESS,
-                f'{count} record(s) downloaded successfully from the '
-                f'odk aggregrate/central server.')
-        if updated > 0:
-            messages.add_message(
-                self.request,
-                messages.SUCCESS,
-                f'{updated} existing record(s) have been updated ')
-        elif count == 0 and updated == 0:
-            messages.add_message(
-                self.request,
-                messages.INFO,
-                f'No new records found from the odk aggregrate/central server.')
-        context = super().get_context_data(**kwargs)
-
-        return context
 
     @property
     def odk_copies(self):
