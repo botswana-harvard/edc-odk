@@ -14,7 +14,7 @@ class ConsentImageInline(TabularInlineMixin, admin.TabularInline):
     form = ConsentImageForm
     extra = 0
 
-    fields = ('consent_image', 'user_uploaded', 'datetime_captured',
+    fields = ('consent_image', 'image', 'user_uploaded', 'datetime_captured',
               'modified', 'hostname_created',)
 
     def get_readonly_fields(self, request, obj=None):

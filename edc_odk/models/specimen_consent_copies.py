@@ -21,19 +21,21 @@ class SpecimenConsentImage(BaseUuidModel):
         SpecimenConsentCopies,
         on_delete=models.PROTECT,
         related_name='specimen_consent_images',)
-    image = models.ImageField(upload_to='specimen_consent/')
+
+    image = models.FileField(upload_to='specimen_consent/')
+
     user_uploaded = models.CharField(
         max_length=50,
         blank=True,
         verbose_name='user uploaded',)
+
     datetime_captured = models.DateTimeField(
         default=get_utcnow)
 
     def specimen_consent_image(self):
             return mark_safe(
-                '<a href="%(url)s">'
-                '<img src="%(url)s" style="padding-right:150px" width="150" height="100" />'
-                '</a>' % {'url': self.image.url})
+                '<embed src="%(url)s" style="border:none" height="100" width="150"'
+                'title="speciment consent"></embed>' % {'url': self.image.url})
 
     specimen_consent_image.short_description = 'Specimen Consent Image'
     specimen_consent_image.allow_tags = True

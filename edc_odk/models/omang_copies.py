@@ -21,19 +21,21 @@ class NationalIdentityImage(BaseUuidModel):
         OmangCopies,
         on_delete=models.PROTECT,
         related_name='national_id_images',)
-    image = models.ImageField(upload_to='omang_copies/')
+
+    image = models.FileField(upload_to='omang_copies/')
+
     user_uploaded = models.CharField(
         max_length=50,
         blank=True,
         verbose_name='user uploaded',)
+
     datetime_captured = models.DateTimeField(
         default=get_utcnow)
 
     def national_identity_image(self):
             return mark_safe(
-                '<a href="%(url)s">'
-                '<img src="%(url)s" style="padding-right:150px" width="150" height="100" />'
-                '</a>' % {'url': self.image.url})
+                '<embed src="%(url)s" style="border:none" height="100" width="150"'
+                'title="omang copy"></embed>' % {'url': self.image.url})
 
     national_identity_image.short_description = 'National Identity Image'
     national_identity_image.allow_tags = True

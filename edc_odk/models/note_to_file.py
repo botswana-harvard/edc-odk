@@ -46,8 +46,8 @@ class NoteToFileDocs(BaseUuidModel):
 
     def ntf_document(self):
             return mark_safe(
-                '<iframe src="%(url)s" style="border:none" height="120" width="120"'
-                'title="note to file" scrolling="yes"></iframe>' % {'url': self.image.url})
+                '<embed src="%(url)s" style="border:none" height="100" width="150"'
+                'title="note to file"></embed>' % {'url': self.image.url})
 
     ntf_document.short_description = 'Preview'
     ntf_document.allow_tags = True
