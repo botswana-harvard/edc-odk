@@ -1,4 +1,5 @@
 from .consent_copies_admin import ConsentCopiesAdmin
+from .note_to_file_admin import NoteToFileAdmin
 from .omang_copies_admin import OmangCopiesAdmin
 from .specimen_consent_copies_admin import SpecimenConsentCopiesAdmin
 from .stampimage_action_mixin import StampImageActionMixin

@@ -1,18 +1,23 @@
 import configparser
-import logging
 import os
 import requests
 import xml.etree.ElementTree as ET
+import logging
 import PIL
+
 
 from dateutil.parser import parse
 from django.conf import settings
 from django.apps import apps as django_apps
 from django.db.utils import IntegrityError
-from django.db.models import ManyToOneRel
+from django.db.models import ManyToOneRel, Q
+from edc_appointment.constants import NEW_APPT
 from edc_base.utils import get_utcnow
 from requests.auth import HTTPDigestAuth
 from PIL import Image
+
+
+logger = logging.getLogger(__name__)
 
 
 class PullODKData:
@@ -20,7 +25,6 @@ class PullODKData:
     Pull image copies from the odk server, create relevant model objects.
     """
 
-    logger = logging.getLogger(__name__)
     base_format = settings.BASE_FORMAT
     submission_format = '[@version=null and @uiVersion=null]/%(group_name)s[@key=%(uuid)s]'
 
@@ -112,7 +116,8 @@ class PullODKData:
 
                         image_groups = [
                             'subject_omang', 'subject_consent',
-                            'specimen_consent', 'clinician_notes']
+                            'specimen_consent', 'clinician_notes',
+                            'notes_to_file', 'lab_results']
                         for group in image_groups:
                             if group in downloadUrl:
                                 key = group
@@ -166,6 +171,19 @@ class PullODKData:
             subject_identifier=None,
             subject_omang=None)
 
+    def pull_note_to_file_data(self):
+        result = self.download_submissions_data(form_id='notes_to_file_v1.0')
+        img_cls = self.note_to_file_image_model_cls
+
+        return self.populate_model_objects(
+            None,
+            result,
+            django_apps.get_model('edc_odk.notetofile'),
+            img_cls,
+            'notes_to_file',
+            ntf_identifier=None,
+            notes_to_file=None)
+
     def pull_clinician_notes_data(self):
         form_ids = self.get_clinician_notes_form_id()
         record_count = 0
@@ -187,6 +205,31 @@ class PullODKData:
                 visit_code=None,
                 timepoint=None,
                 clinician_notes=None)
+            record_count += count
+            record_updated += updated
+        return record_count, record_updated
+
+    def pull_labresults_data(self):
+        form_ids = self.get_labresults_form_id()
+        record_count = 0
+        record_updated = 0
+
+        for app_name, form_id in form_ids.items():
+            img_cls = django_apps.get_model(
+                self.labresults_file_model(app_name))
+
+            result = self.download_submissions_data(form_id=form_id)
+
+            count, updated = self.populate_model_objects(
+                app_name,
+                result,
+                self.labresults_model_cls(app_name),
+                img_cls,
+                'lab_results',
+                subject_identifier=None,
+                visit_code=None,
+                timepoint=None,
+                lab_results=None)
             record_count += count
             record_updated += updated
         return record_count, record_updated
@@ -284,6 +327,15 @@ class PullODKData:
 
                 except IntegrityError as e:
                     raise Exception(e)
+            else:
+                obj, created = model_cls.objects.get_or_create(
+                    identifier=data_dict.get('identifier'))
+                if created:
+                    self.create_image_obj_upload_image(
+                        image_cls,
+                        image_cls_field,
+                        obj,
+                        data_dict)
 
         return count, updated
 
@@ -334,6 +386,9 @@ class PullODKData:
 
                 upload_to = image_cls.image.field.upload_to
 
+                # Check if path is func or string
+                upload_to = upload_to(None, None) if callable(upload_to) else upload_to
+
                 # Download and upload image
                 download_success = self.download_image_file_upload(
                     fields.get(image_url)[i],
@@ -376,15 +431,16 @@ class PullODKData:
         if visit_models:
             visit_model_cls = django_apps.get_model(
                 visit_models[1])
-            try:
-                visit_model_obj = visit_model_cls.objects.get(
-                    subject_identifier=subject_identifier,
-                    visit_code=visit_code,
-                    visit_code_sequence=timepoint)
-            except visit_model_cls.DoesNotExist:
+
+            visit_model_obj = visit_model_cls.objects.filter(
+                subject_identifier=subject_identifier,
+                visit_code=visit_code,
+                visit_code_sequence=timepoint).exclude(
+                    appointment__appt_status=NEW_APPT).order_by('-report_datetime').last()
+            if not visit_model_obj:
                 message = (f'Failed to get visit for {subject_identifier}, at '
                            f'visit {visit_code}. Visit does not exist.')
-                logging.error(message)
+                logger.error(message)
 
         return visit_model_obj
 
@@ -395,6 +451,10 @@ class PullODKData:
     def get_clinician_notes_form_id(self):
         app_config = django_apps.get_app_config('edc_odk')
         return app_config.clinician_notes_form_ids
+
+    def get_labresults_form_id(self):
+        app_config = django_apps.get_app_config('edc_odk')
+        return app_config.labresults_form_ids
 
     @property
     def consent_image_model_cls(self):
@@ -411,8 +471,16 @@ class PullODKData:
         nation_id_image_model = 'edc_odk.nationalidentityimage'
         return django_apps.get_model(nation_id_image_model)
 
+    @property
+    def note_to_file_image_model_cls(self):
+        note_to_file_image_model = 'edc_odk.notetofiledocs'
+        return django_apps.get_model(note_to_file_image_model)
+
     def clinician_notes_image_model(self, app_name=None):
         return '%s.cliniciannotesimage' % app_name
+
+    def labresults_file_model(self, app_name=None):
+        return '%s.labresultsfile' % app_name
 
     def clinician_notes_model_cls(self, app_name=None):
         app_config = django_apps.get_app_config(
@@ -423,6 +491,15 @@ class PullODKData:
         if clinician_notes_model:
             return django_apps.get_model(
                 '%s.%s' % (app_name, clinician_notes_model))
+
+    def labresults_model_cls(self, app_name=None):
+        app_config = django_apps.get_app_config('edc_odk').labresults_models
+
+        labresults_model = app_config.get(app_name, None)
+
+        if labresults_model:
+            return django_apps.get_model(
+                '%s.%s' % (app_name, labresults_model))
 
     def add_image_stamp(self, image_path=None, position=(25, 25), resize=(600, 600)):
         """

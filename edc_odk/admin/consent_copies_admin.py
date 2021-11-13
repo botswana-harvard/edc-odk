@@ -1,5 +1,5 @@
 from django.contrib import admin
-from edc_model_admin import TabularInlineMixin, audit_fields
+from edc_model_admin import TabularInlineMixin
 
 from .modeladmin_mixins import ModelAdminMixin
 from ..admin_site import edc_odk_admin
@@ -14,7 +14,7 @@ class ConsentImageInline(TabularInlineMixin, admin.TabularInline):
     form = ConsentImageForm
     extra = 0
 
-    fields = ('consent_image', 'user_uploaded', 'datetime_captured',
+    fields = ('consent_image', 'image', 'user_uploaded', 'datetime_captured',
               'modified', 'hostname_created',)
 
     def get_readonly_fields(self, request, obj=None):

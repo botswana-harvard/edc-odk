@@ -12,6 +12,8 @@ class Appointment(BaseUuidModel):
 
     visit_code = models.CharField(max_length=25)
 
+    appt_status = models.CharField(max_length=25)
+
 
 class SubjectVisit(BaseUuidModel):
 

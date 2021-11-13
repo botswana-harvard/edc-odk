@@ -28,19 +28,21 @@ class ConsentImage(BaseUuidModel):
         ConsentCopies,
         on_delete=models.PROTECT,
         related_name='consent_images',)
-    image = models.ImageField(upload_to='consent_copies/')
+
+    image = models.FileField(upload_to='consent_copies/')
+
     user_uploaded = models.CharField(
         max_length=50,
         blank=True,
         verbose_name='user uploaded',)
+
     datetime_captured = models.DateTimeField(
         default=get_utcnow)
 
     def consent_image(self):
             return mark_safe(
-                '<a href="%(url)s">'
-                '<img src="%(url)s" style="padding-right:150px" width="150" height="100" />'
-                '</a>' % {'url': self.image.url})
+                '<embed src="%(url)s" style="border:none" height="100" width="150"'
+                'title="consent copy"></embed>' % {'url': self.image.url})
 
     consent_image.short_description = 'Consent Image'
     consent_image.allow_tags = True
