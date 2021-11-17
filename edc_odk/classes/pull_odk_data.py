@@ -4,6 +4,7 @@ import requests
 import xml.etree.ElementTree as ET
 import logging
 import PIL
+import pytz
 
 
 from dateutil.parser import parse
@@ -342,10 +343,9 @@ class PullODKData:
     def update_existing_image_objs(self, images_cls, field_name, obj, fields):
         existing_datetime = self.recent_image_obj_datetime(
             images_cls, field_name, obj, fields)
-        if existing_datetime and\
-           parse(fields.get('date_captured')) > existing_datetime:
-            self.create_image_obj_upload_image(
-                images_cls, field_name, obj, fields)
+        if existing_datetime:
+            if parse(fields.get('date_captured')) > existing_datetime:
+                self.create_image_obj_upload_image(images_cls, field_name, obj, fields)
             return True
         else:
             return False
@@ -396,12 +396,15 @@ class PullODKData:
                     upload_to)
 
                 if download_success:
+                    datetime_captured = fields.get('date_captured')
+                    local_timezone = pytz.timezone('Africa/Gaborone')
+                    datetime_captured.astimezone(local_timezone)
                     # create image model object
                     image_cls.objects.create(
                         **{f'{field_name}': obj},
                         image=upload_to + fields.get(image_name)[i],
                         user_uploaded=fields.get('username'),
-                        datetime_captured=fields.get('date_captured'))
+                        datetime_captured=datetime_captured)
 
                     # Add a stamp to the image upload
                     path = 'media/%(upload_dir)s%(filename)s' % {
