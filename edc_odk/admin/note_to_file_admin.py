@@ -29,8 +29,15 @@ class NoteToFileAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     form = NoteToFileForm
 
-    fieldsets = (audit_fieldset_tuple, )
+    fieldsets = (
+        (None, {
+            'fields': [
+                'subject_identifier',
+                ]
+            }), audit_fieldset_tuple, )
 
     inlines = [NoteToFileDocsInline]
 
-    list_display = ('user_created', 'created',)
+    list_display = ('subject_identifier', 'created',)
+
+    search_fields = ('subject_identifier', )

@@ -39,3 +39,5 @@ class ConsentCopiesAdmin(ModelAdminMixin, admin.ModelAdmin):
     list_display = ('subject_identifier', 'version', 'created', )
 
     inlines = [ConsentImageInline]
+
+    search_fields = ('subject_identifier', )

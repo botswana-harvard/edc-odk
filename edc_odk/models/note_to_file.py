@@ -3,16 +3,10 @@ from django.utils.html import mark_safe
 from edc_base.sites.site_model_mixin import SiteModelMixin
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.utils import get_utcnow
+from edc_identifier.model_mixins import UniqueSubjectIdentifierFieldMixin
 
 
-class NoteToFile(SiteModelMixin, BaseUuidModel):
-
-    identifier = models.CharField(max_length=50, unique=True)
-
-    def save(self, *args, **kwargs):
-        if not self.identifier:
-            self.identifier = get_utcnow().strftime('%Y%m%d%H%M%S')
-        super().save(*args, **kwargs)
+class NoteToFile(UniqueSubjectIdentifierFieldMixin, SiteModelMixin, BaseUuidModel):
 
     class Meta:
         app_label = 'edc_odk'

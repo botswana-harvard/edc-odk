@@ -182,7 +182,7 @@ class PullODKData:
             django_apps.get_model('edc_odk.notetofile'),
             img_cls,
             'notes_to_file',
-            ntf_identifier=None,
+            subject_identifier=None,
             notes_to_file=None)
 
     def pull_clinician_notes_data(self):
@@ -396,7 +396,7 @@ class PullODKData:
                     upload_to)
 
                 if download_success:
-                    datetime_captured = fields.get('date_captured')
+                    datetime_captured = parse(fields.get('date_captured'))
                     local_timezone = pytz.timezone('Africa/Gaborone')
                     datetime_captured.astimezone(local_timezone)
                     # create image model object

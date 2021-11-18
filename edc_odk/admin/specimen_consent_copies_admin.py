@@ -1,5 +1,5 @@
 from django.contrib import admin
-from edc_model_admin import TabularInlineMixin, audit_fields
+from edc_model_admin import TabularInlineMixin
 
 from .modeladmin_mixins import ModelAdminMixin
 from ..admin_site import edc_odk_admin
@@ -39,3 +39,5 @@ class SpecimenConsentCopiesAdmin(ModelAdminMixin, admin.ModelAdmin):
     list_display = ('subject_identifier', 'created', )
 
     inlines = [SpecimenConsentImageInline]
+
+    search_fields = ('subject_identifier', )
