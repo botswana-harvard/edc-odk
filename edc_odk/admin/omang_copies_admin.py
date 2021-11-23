@@ -39,3 +39,5 @@ class OmangCopiesAdmin(ModelAdminMixin, admin.ModelAdmin):
     list_display = ('subject_identifier', 'created', )
 
     inlines = [NationalIdentityImageInline]
+
+    search_fields = ('subject_identifier', )
