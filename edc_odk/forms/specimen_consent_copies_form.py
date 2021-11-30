@@ -10,11 +10,6 @@ from ..models import SpecimenConsentImage
 class SpecimenConsentCopiesForm(
         SiteModelFormMixin, FormValidatorMixin, forms.ModelForm):
 
-    subject_identifier = forms.CharField(
-        label='Subject Identifier',
-        widget=forms.TextInput(attrs={'readonly': 'readonly'}),
-        required=False)
-
     class Meta:
         model = SpecimenConsentCopies
         fields = '__all__'
