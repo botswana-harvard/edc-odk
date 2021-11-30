@@ -14,7 +14,7 @@ class NationalIdentityImageInline(TabularInlineMixin, admin.TabularInline):
     form = NationalIdentityImageForm
     extra = 0
 
-    fields = ('national_identity_image', 'user_uploaded', 'datetime_captured',
+    fields = ('national_identity_image', 'image', 'user_uploaded', 'datetime_captured',
               'modified', 'hostname_created',)
 
     def get_readonly_fields(self, request, obj=None):

@@ -210,6 +210,29 @@ class PullODKData:
             record_updated += updated
         return record_count, record_updated
 
+    def pull_clinician_notes_archive_data(self):
+        form_ids = self.get_clinician_notes_archive_form_id()
+        record_count = 0
+        record_updated = 0
+
+        for app_name, form_id in form_ids.items():
+            img_cls = django_apps.get_model(
+                self.clinician_notes_archive_image_model(app_name))
+
+            result = self.download_submissions_data(form_id=form_id)
+
+            count, updated = self.populate_model_objects(
+                app_name,
+                result,
+                self.clinician_notes_archive_model_cls(app_name),
+                img_cls,
+                'clinician_notes',
+                subject_identifier=None,
+                clinician_notes=None)
+            record_count += count
+            record_updated += updated
+        return record_count, record_updated
+
     def pull_labresults_data(self):
         form_ids = self.get_labresults_form_id()
         record_count = 0
@@ -228,8 +251,6 @@ class PullODKData:
                 img_cls,
                 'lab_results',
                 subject_identifier=None,
-                visit_code=None,
-                timepoint=None,
                 lab_results=None)
             record_count += count
             record_updated += updated
@@ -455,6 +476,10 @@ class PullODKData:
         app_config = django_apps.get_app_config('edc_odk')
         return app_config.clinician_notes_form_ids
 
+    def get_clinician_notes_archive_form_id(self):
+        app_config = django_apps.get_app_config('edc_odk')
+        return app_config.clinician_notes_archivesform_ids
+
     def get_labresults_form_id(self):
         app_config = django_apps.get_app_config('edc_odk')
         return app_config.labresults_form_ids
@@ -482,12 +507,25 @@ class PullODKData:
     def clinician_notes_image_model(self, app_name=None):
         return '%s.cliniciannotesimage' % app_name
 
+    def clinician_notes_archive_image_model(self, app_name=None):
+        return '%s.cliniciannotesimagearchive' % app_name
+
     def labresults_file_model(self, app_name=None):
         return '%s.labresultsfile' % app_name
 
     def clinician_notes_model_cls(self, app_name=None):
         app_config = django_apps.get_app_config(
             'edc_odk').clinician_notes_models
+
+        clinician_notes_model = app_config.get(app_name, 'default')
+
+        if clinician_notes_model:
+            return django_apps.get_model(
+                '%s.%s' % (app_name, clinician_notes_model))
+
+    def clinician_notes_archive_model_cls(self, app_name=None):
+        app_config = django_apps.get_app_config(
+            'edc_odk').clinician_notes_archive_models
 
         clinician_notes_model = app_config.get(app_name, 'default')
 

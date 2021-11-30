@@ -8,6 +8,10 @@ from edc_identifier.model_mixins import UniqueSubjectIdentifierFieldMixin
 
 class NoteToFile(UniqueSubjectIdentifierFieldMixin, SiteModelMixin, BaseUuidModel):
 
+    @property
+    def related_objects(self):
+        return getattr(self, 'notes_to_file')
+
     class Meta:
         app_label = 'edc_odk'
         verbose_name = 'Note to file'

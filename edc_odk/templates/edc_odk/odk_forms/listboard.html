@@ -1,84 +1,109 @@
 {% extends "edc_dashboard/listboard.html" %}
+{% load admin_urls %}
 {% load edc_base_extras %}
+{% load edc_dashboard_extras %}
 {% load odk_dashboard_extras %}
 
-{% block listboard_panel %}
-<!--
-	<a 	id="odk_pull_data"
-	 	title="Pull Data"
-	    class="btn btn-default btn-sm" data-toggle="tooltip"  data-placement="right"
-	    style="margin-left:20px;"
-	    href="{{odk_listboard_url}}?pull_data=true" >
-	    <i class="fa fa-download" aria-hidden="true"></i> Pull Form Data
-	</a>
--->
-	
-{% endblock listboard_panel %}
+{% load tz %}
+{% load static %}
 
-{% block listboard_table_header %}
+{% block extra-styles %}
+	{{ block.super }}
 
-    <!-- begin results header -->
-    <th>#</th>
-    <th></th>
-    <th>Subject Consent Copies</th>
-    <th>Subject Omang Copies</th>
-    <th></th>
-    <th>Identifier</th>
-    <th></th>
-    <th>Consent version</th>
-    <th>Modified</th>
-    <th>Host</th>
-    <!-- end results header -->
+{% endblock %}
+​
+{% block extra-scripts %}
+    {{ block.super }}
 
-{% endblock listboard_table_header %}
-	
-{% block listboard_table_button_column %}
-	{% comment %}
-
-    result: model_wrapper, usually the SubjectConsentModelWrapper
-        Required attributes:
-            subject_identifier
-            href: (model_wrapper.href)
-
-	{% endcomment %}
-	<td style="white-space: nowrap">
-    <div class="btn-group">
-    
-    {% if result.id %}
-         <a id="btn-subject-dashboard-{{result.object.subject_identifier}}" class="btn btn-primary btn-sm" role="button"   
-        	title="Go to subject's dashboard" href="{% url subject_dashboard_url result.object.subject_identifier %}">
-        <i class="far fa-user-circle fa-sm"></i> Dashboard  <i class="fa fa-share"></i></a>
-    {% endif %}
+{% endblock extra-scripts %}
+​
+{% block main %}
+    <div class="panel panel-info" id="accordionExample">
+    <div class="panel-heading">
+    	<div class="btn-group">
+	    	<a type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	    		<i class="fas fa-folder-open"></i>
+	    		Archive forms <span class="caret"></span>
+		  	</a>
+		  	<ul class="dropdown-menu">
+		  		{% for model_name in obj_dict.keys %}
+		  		<li>
+		  			<a class="dropdown-item" href="#model_{{forloop.counter}}" aria-controls="#model_{{forloop.counter}}" role="tab" data-toggle="tab">{{model_name}}</a>
+		  		</li>
+		        {% endfor %}
+		  	</ul>
+		</div>
     </div>
-	</td>
-	
-	<td>
-		<div class="btn-group">
-		{% if result.id %}
-			{% consent_copies_button result %}
-		{% endif %}
-		</div>
-	</td>
-
-	<td>
-		<div class="btn-group">
-		{% if result.id %}
-			{% omang_copies_button result %}
-		{% endif %}
-		</div>
-	</td>
-
-	<td></td>
-{% endblock listboard_table_button_column %}
-
-{% block listboard_table_columns %}
-	
-	
-
-    <td>{{ result.object.subject_identifier }}</td>
-    <td></td>
-    <td style="text-align:center">{{ result.version }}</td>  
-    <td>{{ result.object.modified|date:"SHORT_DATETIME_FORMAT" }}</td>
-    <td>{{ result.hostname_created }}</td>
-
-{% endblock listboard_table_columns %}
+   	<div class="tab-content table table-responsive">
+   		{% for folders in obj_dict.values %}
+   				<table role="tabpanel" class="tab-pane fade in table table-condensed table-hover small" id="model_{{forloop.counter}}">
+   					<thead>
+   						<tr>
+	                        <th width="100%">
+	                            <small>
+	                                 PARTICIPANT(S)
+	                            </small>
+	                        </th>
+	                    </tr>
+	                  </thead>
+	                  <tbody>
+	                  	{% for folder in folders %}
+                   		{% with collapse_item=forloop.counter %}
+	                    <tr>
+	                        <td>
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#{{folder.verbose_name|remove_spaces}}{{collapse_item}}"
+                                        aria-expanded="true" aria-controls="collapseVisit">
+                                    <i class="fas fa-folder-open"></i>
+                                    	<small>{{folder.subject_identifier}}</small>
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+	                        </td>
+	                        <td>    
+	                        </td>
+	                        <td>       
+	                        </td>
+	                    </tr>
+	                    <tr class="collapse table" id="{{folder.verbose_name|remove_spaces}}{{collapse_item}}">
+	                    	<td>
+	                    		<table class="table table-condensed table-hover">
+		                    		<thead width="100%">
+		                    			<tr>
+		                    				<td width="70%">
+		                    					<small>NAME</small>
+		                    				</td>
+		                    				<td>
+		                    					<small>USER CREATED</small>
+		                    				</td>
+		                    				<td>
+		                    					<small>DATE CREATED</small>
+		                    				</td>
+		                    			</tr>
+		                    		</thead>
+		                    		<tbody>
+		                    			{% for item in folder.related_objects.all %}
+		                    			<tr>
+		                    				<td>
+		                    					<i class="fas fa-file"></i>
+		                    					<a href="{{item.image.url}}" data-toggle="lightbox" data-gallery="example-gallery" class="item">
+			                                    	{{item.image.name}}
+		                                		</a>
+		                    				</td>
+		                    				<td>
+		                    					{{item.user_created}}
+		                    				</td>
+		                    				<td>
+		                    					{{item.datetime_captured}}
+		                    				</td>
+		                    			</tr>
+		                    			{% endfor %}
+		                    		</tbody>	
+                    			</table>
+                    		</td>
+                    	</tr>
+                    	{% endwith %}
+	                	{% endfor %}
+	                  </tbody>
+	               	</table> 
+	            {% endfor %}
+	         </div>
+{% endblock main %}

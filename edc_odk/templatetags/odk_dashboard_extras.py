@@ -92,3 +92,8 @@ def specimen_consent_copies_dash_button(subject_identifier=None):
             add_specimen_consent_copies_href=specimen_consent_copies.href,
             specimen_consent_copies_model_obj=model_obj,
             title=' '.join(title),)
+
+
+@register.filter
+def remove_spaces(value):
+    return value.replace(" ", "")

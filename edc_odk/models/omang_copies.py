@@ -9,6 +9,10 @@ from edc_identifier.model_mixins import UniqueSubjectIdentifierFieldMixin
 class OmangCopies(
         UniqueSubjectIdentifierFieldMixin, SiteModelMixin, BaseUuidModel):
 
+    @property
+    def related_objects(self):
+        return getattr(self, 'national_id_images')
+
     class Meta:
         app_label = 'edc_odk'
         verbose_name = 'Omang Copies'

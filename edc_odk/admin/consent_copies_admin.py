@@ -33,7 +33,8 @@ class ConsentCopiesAdmin(ModelAdminMixin, admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': [
-                'subject_identifier', ]}),
+                'subject_identifier',
+                'version', ]}),
         )
 
     list_display = ('subject_identifier', 'version', 'created', )
