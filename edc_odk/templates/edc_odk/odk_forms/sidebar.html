@@ -1,17 +1,15 @@
-{% extends 'edc_subject_dashboard/dashboard/sidebar.html' %}
 {% load odk_dashboard_extras %}
-
-
-{% block consents %}
-    {% include 'edc_subject_dashboard/dashboard/sidebar/consents.html' %}
-    {% consent_copies_dashboard_button subject_identifier %}
-
-{% endblock consents %}
-
-{% block special_forms %}
-	{% if special_forms_include_value %}
-		{% include special_forms_include_value %}
-	{% endif %}
-	{% omang_copies_dashboard_button subject_identifier %}
-	{% specimen_consent_copies_dash_button subject_identifier %}
-{% endblock special_forms %}
+<table class="table table-condensed">
+	<tr>
+		<td>{% consent_copies_button subject_screening %}</td>
+	</tr>
+	<tr>
+		<td>{% omang_copies_button subject_screening %}</td>
+	</tr>
+	<tr>
+		<td>{% specimen_consent_button subject_screening %}</td>
+	</tr>
+	<tr>
+		<td>{% note_to_file_button subject_screening %}</td>
+	</tr>
+</table>

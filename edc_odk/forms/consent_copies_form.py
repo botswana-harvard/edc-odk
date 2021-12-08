@@ -10,6 +10,11 @@ from ..models import ConsentImage
 class ConsentCopiesForm(
         SiteModelFormMixin, FormValidatorMixin, forms.ModelForm):
 
+    subject_identifier = forms.CharField(
+        label='Subject Identifier',
+        widget=forms.TextInput(attrs={'readonly': 'readonly'}),
+        required=False)
+
     class Meta:
         model = ConsentCopies
         fields = '__all__'

@@ -17,6 +17,16 @@ def dashboard_button(model_wrapper):
         subject_identifier=model_wrapper.subject_identifier)
 
 
+@register.inclusion_tag('edc_odk/buttons/note_to_file_button.html')
+def note_to_file_button(model_wrapper):
+    title = ['note to file.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_note_to_file_href=model_wrapper.note_to_file.href,
+        note_to_file_model_obj=model_wrapper.note_to_file_model_obj,
+        title=' '.join(title),)
+
+
 @register.inclusion_tag('edc_odk/buttons/consent_copies_button.html')
 def consent_copies_button(model_wrapper):
     title = ['subject copies of consent.']
@@ -34,6 +44,16 @@ def omang_copies_button(model_wrapper):
         subject_identifier=model_wrapper.subject_identifier,
         add_omang_copies_href=model_wrapper.omang_copies.href,
         omang_copies_model_obj=model_wrapper.omang_copies_model_obj,
+        title=' '.join(title),)
+
+
+@register.inclusion_tag('edc_odk/buttons/specimen_consent_button.html')
+def specimen_consent_button(model_wrapper):
+    title = ['specimen consent copies.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_specimen_consent_copies_href=model_wrapper.specimen_consent_copies.href,
+        specimen_consent_copies_model_obj=model_wrapper.specimen_consent_copies_model_obj,
         title=' '.join(title),)
 
 
