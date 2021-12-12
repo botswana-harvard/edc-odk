@@ -1,3 +1,4 @@
 include AUTHORS CHANGES README.md LICENCE
 recursive-include edc_odk/templates *
+recursive-include edc_odk/static *
 

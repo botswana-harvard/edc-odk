@@ -117,3 +117,14 @@ def specimen_consent_copies_dash_button(subject_identifier=None):
 @register.filter
 def remove_spaces(value):
     return value.replace(" ", "")
+
+
+@register.filter
+def to_list(value):
+    return list(value)
+
+
+@register.filter
+def list_index(values, index):
+    if len(values) > index:
+        return values[index]
