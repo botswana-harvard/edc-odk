@@ -13,6 +13,7 @@ class SpecimenConsentImageInline(TabularInlineMixin, admin.TabularInline):
     model = SpecimenConsentImage
     form = SpecimenConsentImageForm
     extra = 0
+    min_num = 1
 
     fields = ('specimen_consent_image', 'image', 'user_uploaded', 'datetime_captured',
               'modified', 'hostname_created',)

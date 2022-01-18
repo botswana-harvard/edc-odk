@@ -1,5 +1,7 @@
+from .clinician_notes_wrapper_mixin import ClinicianNotesModelWrapperMixin
 from .consent_copies_wrapper_mixin import ConsentCopiesModelWrapperMixin
 from .consent_copies_model_wrapper import ConsentCopiesModelWrapper
+from .labresults_wrapper_mixin import LabResultsModelWrapperMixin
 from .note_to_file_wrapper_mixin import NoteToFileModelWrapperMixin
 from .omang_copies_model_wrapper import OmangCopiesModelWrapper
 from .omang_copies_wrapper_mixin import OmangCopiesModelWrapperMixin

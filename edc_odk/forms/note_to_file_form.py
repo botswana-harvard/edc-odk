@@ -21,6 +21,9 @@ class NoteToFileForm(SiteModelFormMixin, FormValidatorMixin, forms.ModelForm):
 
 class NoteToFileDocsForm(forms.ModelForm):
 
+    def has_changed(self):
+        return True
+
     class Meta:
         model = NoteToFileDocs
         fields = '__all__'

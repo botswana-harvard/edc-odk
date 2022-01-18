@@ -13,6 +13,7 @@ class NoteToFileDocsInline(TabularInlineMixin, admin.TabularInline):
     model = NoteToFileDocs
     form = NoteToFileDocsForm
     extra = 0
+    min_num = 1
 
     fields = ('ntf_document', 'image', 'user_uploaded', 'datetime_captured',
               'modified', 'hostname_created',)

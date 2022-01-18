@@ -13,6 +13,7 @@ class NationalIdentityImageInline(TabularInlineMixin, admin.TabularInline):
     model = NationalIdentityImage
     form = NationalIdentityImageForm
     extra = 0
+    min_num = 1
 
     fields = ('national_identity_image', 'image', 'user_uploaded', 'datetime_captured',
               'modified', 'hostname_created',)

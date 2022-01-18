@@ -17,6 +17,26 @@ def dashboard_button(model_wrapper):
         subject_identifier=model_wrapper.subject_identifier)
 
 
+@register.inclusion_tag('edc_odk/buttons/clinician_notes_archives_button.html')
+def clinician_notes_archives_button(model_wrapper):
+    title = ['clinician notes archive.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_clinician_notes_href=model_wrapper.clinician_notes.href,
+        clinician_notes_model_obj=model_wrapper.clinician_notes_model_obj,
+        title=' '.join(title),)
+
+
+@register.inclusion_tag('edc_odk/buttons/labresults_button.html')
+def labresults_button(model_wrapper):
+    title = ['lab results.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_labresults_href=model_wrapper.lab_results.href,
+        labresults_model_obj=model_wrapper.labresults_model_obj,
+        title=' '.join(title),)
+
+
 @register.inclusion_tag('edc_odk/buttons/note_to_file_button.html')
 def note_to_file_button(model_wrapper):
     title = ['note to file.']
