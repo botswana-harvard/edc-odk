@@ -4,9 +4,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from .specimen_consent_model_wrapper import SpecimenConsentModelWrapper
 
 
-class OmangCopiesModelWrapperMixin:
+class SpecimenConsentModelWrapperMixin:
 
-    specimen_consent_model_wrapper_cls = SpecimenConsentModelWrapper
+    specimen_consent_copies_model_wrapper_cls = SpecimenConsentModelWrapper
 
     @property
     def specimen_consent_copies_model_obj(self):
@@ -23,15 +23,15 @@ class OmangCopiesModelWrapperMixin:
         """Returns a wrapped saved or unsaved omang copies.
         """
         model_obj = self.specimen_consent_copies_model_obj or self.specimen_consent_copies_cls(
-            **self.create_specimen_consent_options)
-        return self.specimen_consent_model_wrapper_cls(model_obj=model_obj)
+            **self.create_specimen_consent_copies_options)
+        return self.specimen_consent_copies_model_wrapper_cls(model_obj=model_obj)
 
     @property
     def specimen_consent_copies_cls(self):
-        return django_apps.get_model('edc_odk.omangcopies')
+        return django_apps.get_model('edc_odk.specimenconsentcopies')
 
     @property
-    def create_specimen_consent_options(self):
+    def create_specimen_consent_copies_options(self):
         """Returns a dictionary of options to create a new
         unpersisted omang copies model instance.
         """

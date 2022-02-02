@@ -12,8 +12,11 @@ class ConsentCopies(
     version = models.CharField(
         verbose_name='Consent version',
         max_length=10,
-        help_text='See \'Consent Type\' for consent versions by period.',
-        editable=False)
+        help_text='See \'Consent Type\' for consent versions by period.')
+
+    @property
+    def related_objects(self):
+        return getattr(self, 'consent_images')
 
     class Meta:
         app_label = 'edc_odk'

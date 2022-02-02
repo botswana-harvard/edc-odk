@@ -1,84 +1,82 @@
 {% extends "edc_dashboard/listboard.html" %}
+{% load admin_urls %}
 {% load edc_base_extras %}
+{% load edc_dashboard_extras %}
 {% load odk_dashboard_extras %}
 
-{% block listboard_panel %}
-<!--
-	<a 	id="odk_pull_data"
-	 	title="Pull Data"
-	    class="btn btn-default btn-sm" data-toggle="tooltip"  data-placement="right"
-	    style="margin-left:20px;"
-	    href="{{odk_listboard_url}}?pull_data=true" >
-	    <i class="fa fa-download" aria-hidden="true"></i> Pull Form Data
-	</a>
--->
-	
-{% endblock listboard_panel %}
+{% load tz %}
+{% load static %}
 
-{% block listboard_table_header %}
-
-    <!-- begin results header -->
-    <th>#</th>
-    <th></th>
-    <th>Subject Consent Copies</th>
-    <th>Subject Omang Copies</th>
-    <th></th>
-    <th>Identifier</th>
-    <th></th>
-    <th>Consent version</th>
-    <th>Modified</th>
-    <th>Host</th>
-    <!-- end results header -->
-
-{% endblock listboard_table_header %}
-	
-{% block listboard_table_button_column %}
-	{% comment %}
-
-    result: model_wrapper, usually the SubjectConsentModelWrapper
-        Required attributes:
-            subject_identifier
-            href: (model_wrapper.href)
-
-	{% endcomment %}
-	<td style="white-space: nowrap">
-    <div class="btn-group">
-    
-    {% if result.id %}
-         <a id="btn-subject-dashboard-{{result.object.subject_identifier}}" class="btn btn-primary btn-sm" role="button"   
-        	title="Go to subject's dashboard" href="{% url subject_dashboard_url result.object.subject_identifier %}">
-        <i class="far fa-user-circle fa-sm"></i> Dashboard  <i class="fa fa-share"></i></a>
-    {% endif %}
-    </div>
-	</td>
-	
-	<td>
-		<div class="btn-group">
-		{% if result.id %}
-			{% consent_copies_button result %}
-		{% endif %}
+{% block extra-styles %}
+	{{ block.super }}
+	<link rel="stylesheet" type="text/css" href="{% static 'edc_odk/css/listboard.css' %}">
+{% endblock %}
+​
+{% block extra-scripts %}
+    {{ block.super }}
+	<script type="text/javascript" charset="utf8" src="{% static 'edc_odk/js/listboard.js' %}"></script>
+{% endblock extra-scripts %}
+​
+{% block main %}
+	<div class="container">
+		<div class="row">
+           <div class="col-lg-3 col-md-3 bhoechie-tab-menu">
+             <div class="list-group">
+             	{% for model_name in obj_dict.keys %}
+             		{% with counter=forloop.counter0 %}
+		               <a href="#" class="list-group-item {% if counter == 0 %}active{% endif %} text-center">
+		                 <br/>{{model_name}}
+		               </a>
+		             {% endwith %}
+	            {% endfor %}
+             </div>
+           </div>
+           <div class="col-lg-9 col-md-9 bhoechie-tab">
+               {% for model_name in obj_dict.keys %}
+               	{% with list_items=obj_dict.values|to_list %}
+	               <div class="bhoechie-tab-content {% if forloop.counter0 == 0 %}active{% endif %}">
+	               		<div class="panel panel-default">
+						  	<div class="panel-heading">Participant(s)</div>
+						  	<div class="panel-body list-group upload-list" id="scroll-list">
+						  		{% for folder in list_items|list_index:forloop.counter0 %}
+								  <a data-toggle="modal" data-target="#item{{forloop.counter}}" class="list-group-item">{{folder.subject_identifier}} <span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+								{% endfor %}
+						  	</div>
+						</div>
+	               </div>
+	             {% endwith %}
+	            {% endfor %}             
+            </div>
+        </div>
+  	</div>
+  	{% for model_name in obj_dict.keys %}
+  	{% with list_items=obj_dict.values|to_list %}
+  	<!-- The modal -->
+  	{% for folder in list_items|list_index:forloop.counter0 %}
+	<div class="modal fade" id="item{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="modalLabel">{{folder.subject_identifier}}</h4>
+				</div>
+				<div class="modal-body list-group upload-list">
+					<h5 style="font-weight:500">Uploaded File(s) <span class="badge">{{folder.related_objects.all|length}}</span></h5>
+					{% for item in folder.related_objects.all %}
+					  	<a href="{{item.image.url}}" class="list-group-item">
+							{{item.image.name}}
+					  	</a>
+					{% endfor %}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
 		</div>
-	</td>
-
-	<td>
-		<div class="btn-group">
-		{% if result.id %}
-			{% omang_copies_button result %}
-		{% endif %}
-		</div>
-	</td>
-
-	<td></td>
-{% endblock listboard_table_button_column %}
-
-{% block listboard_table_columns %}
-	
-	
-
-    <td>{{ result.object.subject_identifier }}</td>
-    <td></td>
-    <td style="text-align:center">{{ result.version }}</td>  
-    <td>{{ result.object.modified|date:"SHORT_DATETIME_FORMAT" }}</td>
-    <td>{{ result.hostname_created }}</td>
-
-{% endblock listboard_table_columns %}
+	</div>
+	{% endfor %}
+	{% endwith %}
+	{% endfor %}
+{% endblock main %}

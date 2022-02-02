@@ -1,5 +1,9 @@
+from .clinician_notes_archives_form import ClinicianNotesArchivesForm
+from .clinician_notes_archives_form import ClinicianNotesImageArchiveForm
 from .consent_copies_form import ConsentCopiesForm
 from .consent_copies_form import ConsentImageForm
+from .lab_results_files_form import LabResultsFilesForm
+from .lab_results_files_form import LabResultsFileForm
 from .note_to_file_form import NoteToFileForm, NoteToFileDocsForm
 from .omang_copies_form import OmangCopiesForm
 from .omang_copies_form import NationalIdentityImageForm

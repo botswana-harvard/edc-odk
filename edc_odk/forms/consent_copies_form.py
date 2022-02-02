@@ -22,6 +22,9 @@ class ConsentCopiesForm(
 
 class ConsentImageForm(forms.ModelForm):
 
+    def has_changed(self):
+        return True
+
     class Meta:
         model = ConsentImage
         fields = '__all__'

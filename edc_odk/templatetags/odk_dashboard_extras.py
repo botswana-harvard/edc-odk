@@ -17,6 +17,36 @@ def dashboard_button(model_wrapper):
         subject_identifier=model_wrapper.subject_identifier)
 
 
+@register.inclusion_tag('edc_odk/buttons/clinician_notes_archives_button.html')
+def clinician_notes_archives_button(model_wrapper):
+    title = ['clinician notes archive.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_clinician_notes_href=model_wrapper.clinician_notes.href,
+        clinician_notes_model_obj=model_wrapper.clinician_notes_model_obj,
+        title=' '.join(title),)
+
+
+@register.inclusion_tag('edc_odk/buttons/labresults_button.html')
+def labresults_button(model_wrapper):
+    title = ['lab results.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_labresults_href=model_wrapper.lab_results.href,
+        labresults_model_obj=model_wrapper.labresults_model_obj,
+        title=' '.join(title),)
+
+
+@register.inclusion_tag('edc_odk/buttons/note_to_file_button.html')
+def note_to_file_button(model_wrapper):
+    title = ['note to file.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_note_to_file_href=model_wrapper.note_to_file.href,
+        note_to_file_model_obj=model_wrapper.note_to_file_model_obj,
+        title=' '.join(title),)
+
+
 @register.inclusion_tag('edc_odk/buttons/consent_copies_button.html')
 def consent_copies_button(model_wrapper):
     title = ['subject copies of consent.']
@@ -34,6 +64,16 @@ def omang_copies_button(model_wrapper):
         subject_identifier=model_wrapper.subject_identifier,
         add_omang_copies_href=model_wrapper.omang_copies.href,
         omang_copies_model_obj=model_wrapper.omang_copies_model_obj,
+        title=' '.join(title),)
+
+
+@register.inclusion_tag('edc_odk/buttons/specimen_consent_button.html')
+def specimen_consent_button(model_wrapper):
+    title = ['specimen consent copies.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_specimen_consent_copies_href=model_wrapper.specimen_consent_copies.href,
+        specimen_consent_copies_model_obj=model_wrapper.specimen_consent_copies_model_obj,
         title=' '.join(title),)
 
 
@@ -92,3 +132,19 @@ def specimen_consent_copies_dash_button(subject_identifier=None):
             add_specimen_consent_copies_href=specimen_consent_copies.href,
             specimen_consent_copies_model_obj=model_obj,
             title=' '.join(title),)
+
+
+@register.filter
+def remove_spaces(value):
+    return value.replace(" ", "")
+
+
+@register.filter
+def to_list(value):
+    return list(value)
+
+
+@register.filter
+def list_index(values, index):
+    if len(values) > index:
+        return values[index]

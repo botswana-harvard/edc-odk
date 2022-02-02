@@ -28,6 +28,7 @@ def pull_non_crf_odk_data():
     PullODKData().pull_consent_images_data()
     PullODKData().pull_omang_images_data()
     PullODKData().pull_specimen_consent_images_data()
+    PullODKData().pull_clinician_notes_archive_data()
 
 
 @shared_task

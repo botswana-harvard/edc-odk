@@ -1,4 +1,6 @@
+from .clinician_notes_archives_admin import ClinicianNotesArchivesAdmin
 from .consent_copies_admin import ConsentCopiesAdmin
+from .labresults_files_admin import LabResultsFilesAdmin
 from .note_to_file_admin import NoteToFileAdmin
 from .omang_copies_admin import OmangCopiesAdmin
 from .specimen_consent_copies_admin import SpecimenConsentCopiesAdmin

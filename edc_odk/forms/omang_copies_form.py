@@ -22,6 +22,9 @@ class OmangCopiesForm(
 
 class NationalIdentityImageForm(forms.ModelForm):
 
+    def has_changed(self):
+        return True
+
     class Meta:
         model = NationalIdentityImage
         fields = '__all__'

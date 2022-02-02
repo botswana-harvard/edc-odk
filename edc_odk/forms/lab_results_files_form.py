@@ -1,13 +1,11 @@
 from django import forms
-
 from edc_base.sites import SiteModelFormMixin
 from edc_form_validators import FormValidatorMixin
 
-from ..models import SpecimenConsentCopies
-from ..models import SpecimenConsentImage
+from ..models import LabResultsFiles, LabResultsFile
 
 
-class SpecimenConsentCopiesForm(
+class LabResultsFilesForm(
         SiteModelFormMixin, FormValidatorMixin, forms.ModelForm):
 
     subject_identifier = forms.CharField(
@@ -16,15 +14,12 @@ class SpecimenConsentCopiesForm(
         required=False)
 
     class Meta:
-        model = SpecimenConsentCopies
+        model = LabResultsFiles
         fields = '__all__'
 
 
-class SpecimenConsentImageForm(forms.ModelForm):
-
-    def has_changed(self):
-        return True
+class LabResultsFileForm(forms.ModelForm):
 
     class Meta:
-        model = SpecimenConsentImage
+        model = LabResultsFile
         fields = '__all__'
