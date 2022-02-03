@@ -24,6 +24,10 @@ class NoteToFileModelWrapperMixin:
         """
         model_obj = self.note_to_file_model_obj or self.note_to_file_cls(
             **self.create_note_to_file_options)
+        if 'subject_dashboard' in self.next_url_name:
+            next_url_name = self.next_url_name
+            return self.note_to_file_model_wrapper_cls(
+                model_obj=model_obj, next_url_name=next_url_name)
         return self.note_to_file_model_wrapper_cls(model_obj=model_obj)
 
     @property
