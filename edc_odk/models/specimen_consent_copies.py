@@ -24,7 +24,7 @@ class SpecimenConsentImage(BaseUuidModel):
     consent_copies = models.ForeignKey(
         SpecimenConsentCopies,
         on_delete=models.PROTECT,
-        related_name='specimen_consent_images',)
+        related_name='specimen_consent_images')
 
     image = models.FileField(upload_to='specimen_consent/')
 

@@ -10,7 +10,7 @@ class NoteToFile(UniqueSubjectIdentifierFieldMixin, SiteModelMixin, BaseUuidMode
 
     @property
     def related_objects(self):
-        return getattr(self, 'notes_to_file')
+        return getattr(self, 'note_to_file')
 
     class Meta:
         app_label = 'edc_odk'
@@ -18,21 +18,20 @@ class NoteToFile(UniqueSubjectIdentifierFieldMixin, SiteModelMixin, BaseUuidMode
         verbose_name_plural = 'Notes to file'
 
 
-def upload_to_path(instance, filename):
-    today = get_utcnow().date().strftime('%Y/%m/%d')
-    if filename:
-        return f'notes_to_file/{today}/{filename}'
-    return f'notes_to_file/{today}/'
-
-
 class NoteToFileDocs(BaseUuidModel):
 
     notes_to_file = models.ForeignKey(
         NoteToFile,
         on_delete=models.PROTECT,
-        related_name='notes_to_file',)
+        related_name='note_to_file')
 
-    image = models.FileField(upload_to=upload_to_path)
+    def upload_to_path(instance, filename):
+        today = get_utcnow().date().strftime('%Y/%m/%d')
+        if filename:
+            return f'notes_to_file/{today}/{filename}'
+        return f'notes_to_file/{today}/'
+
+    image = models.FileField(upload_to='notes_to_file/')
 
     user_uploaded = models.CharField(
         max_length=50,
