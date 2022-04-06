@@ -11,3 +11,11 @@ from .omang_copies import NationalIdentityImage
 from .signals import natinal_identity_image_on_post_save
 from .specimen_consent_copies import SpecimenConsentCopies
 from .specimen_consent_copies import SpecimenConsentImage
+from .adult_main_consent import AdultMainConsent
+from .adult_main_consent import AdultMainConsentImage
+from .assent import Assent
+from .assent import AssentImage
+from .continued_participation import ContinuedParticipation
+from .continued_participation import ContinuedParticipationImage
+from .parental_consent import ParentalConsent
+from .parental_consent import ParentalConsentImage
