@@ -19,3 +19,5 @@ from .continued_participation import ContinuedParticipation
 from .continued_participation import ContinuedParticipationImage
 from .parental_consent import ParentalConsent
 from .parental_consent import ParentalConsentImage
+from .birth_certificate import BirthCertificate
+from .birth_certificate import BirthCertificateImage

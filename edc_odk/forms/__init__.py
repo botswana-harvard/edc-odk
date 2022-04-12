@@ -17,3 +17,5 @@ from .continued_participation_form import ContinuedParticipationForm
 from .continued_participation_form import ContinuedParticipationImageForm
 from .parental_consent_form import ParentalConsentForm
 from .parental_consent_form import ParentalConsentImageForm
+from .birth_certificate_form import BirthCertificateForm
+from .birth_certificate_form import BirthCertificateImageForm
