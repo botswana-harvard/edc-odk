@@ -9,3 +9,4 @@ from .adult_main_consent_admin import AdultMainConsentAdmin
 from .assent_admin import AssentAdmin
 from .continued_participation_admin import ContinuedParticipationAdmin
 from .parental_consent_admin import ParentalConsentAdmin
+from .birth_certificate_admin import BirthCertificateAdmin
