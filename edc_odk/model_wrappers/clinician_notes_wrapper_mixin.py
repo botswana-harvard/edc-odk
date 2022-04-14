@@ -24,7 +24,7 @@ class ClinicianNotesModelWrapperMixin:
         """
         model_obj = self.clinician_notes_model_obj or self.clinician_notes_cls(
             **self.create_clinician_notes_options)
-        if 'subject_dashboard' in self.next_url_name:
+        if 'dashboard' in self.next_url_name:
             next_url_name = self.next_url_name
             return self.clinician_notes_model_wrapper_cls(
                 model_obj=model_obj, next_url_name=next_url_name)

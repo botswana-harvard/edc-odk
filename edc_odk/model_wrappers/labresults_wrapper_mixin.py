@@ -24,7 +24,7 @@ class LabResultsModelWrapperMixin:
         """
         model_obj = self.labresults_model_obj or self.labresults_cls(
             **self.create_labresults_options)
-        if 'subject_dashboard' in self.next_url_name:
+        if 'dashboard' in self.next_url_name:
             next_url_name = self.next_url_name
             return self.labresults_model_wrapper_cls(
                 model_obj=model_obj, next_url_name=next_url_name)
