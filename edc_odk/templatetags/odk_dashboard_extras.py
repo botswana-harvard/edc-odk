@@ -77,6 +77,56 @@ def specimen_consent_button(model_wrapper):
         title=' '.join(title),)
 
 
+@register.inclusion_tag('edc_odk/buttons/adult_main_consent_button.html')
+def adult_main_consent_button(model_wrapper):
+    title = ['adult main consent']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_adult_main_consent_href=model_wrapper.adult_main_consent.href,
+        adult_main_consent_model_obj=model_wrapper.adult_main_consent,
+        title=' '.join(title),)
+
+
+@register.inclusion_tag('edc_odk/buttons/assents_button.html')
+def assents_button(model_wrapper):
+    title = ['assents']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_assents_href=model_wrapper.assents.href,
+        assents_model_obj=model_wrapper.assents,
+        title=' '.join(title),)
+
+
+@register.inclusion_tag('edc_odk/buttons/birth_certificate_button.html')
+def birth_certificate_button(model_wrapper):
+    title = ['birth certificate']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_birth_certificate_href=model_wrapper.birth_certificate.href,
+        birth_certificate_model_obj=model_wrapper.birth_certificate,
+        title=' '.join(title),)
+
+
+@register.inclusion_tag('edc_odk/buttons/continued_participation_button.html')
+def continued_participation_button(model_wrapper):
+    title = ['continued participation']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_continued_participation_href=model_wrapper.continued_participation.href,
+        continued_participation_model_obj=model_wrapper.continued_participation,
+        title=' '.join(title),)
+
+
+@register.inclusion_tag('edc_odk/buttons/parental_consent_button.html')
+def parental_consent_button(model_wrapper):
+    title = ['continued participation']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_parental_consent_href=model_wrapper.parental_consent.href,
+        parental_consent_model_obj=model_wrapper.parental_consent,
+        title=' '.join(title),)
+
+
 @register.inclusion_tag('edc_odk/odk_forms/sidebar/consent_copies.html')
 def consent_copies_dashboard_button(subject_identifier=None):
     consent_copies_cls = django_apps.get_model(

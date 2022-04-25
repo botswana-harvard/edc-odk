@@ -1,0 +1,12 @@
+<a id="adultmainconsent_add_{{ subject_identifier }}"
+     title="{{ title }}"
+
+    {% if adult_main_consent_model_obj %}
+        class="btn btn-success btn-sm" data-toggle="tooltip"  data-placement="right"
+        href="{{ add_adult_main_consent_href }}">
+    {% else %}
+        class="btn btn-warning btn-sm" data-toggle="tooltip"  data-placement="right"
+        href="{{ add_adult_main_consent_href }}">
+    {% endif %}
+        Adult main consent
+</a>
