@@ -19,7 +19,8 @@ from .assent import AssentImage
 def natinal_identity_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw:
         if created:
-            encrypt_files(instance)
+            subject_identifier = instance.omang_copies.subject_identifier
+            encrypt_files(instance, subject_identifier)
 
 
 @receiver(post_save, weak=False, sender=BirthCertificateImage,
@@ -27,7 +28,8 @@ def natinal_identity_image_on_post_save(sender, instance, raw, created, **kwargs
 def birth_certificate_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw:
         if created:
-            encrypt_files(instance)
+            subject_identifier = instance.birth_certificate.subject_identifier
+            encrypt_files(instance, subject_identifier)
 
 
 @receiver(post_save, weak=False, sender=AdultMainConsentImage,
@@ -35,7 +37,8 @@ def birth_certificate_image_on_post_save(sender, instance, raw, created, **kwarg
 def adult_main_consent_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw:
         if created:
-            encrypt_files(instance)
+            subject_identifier = instance.adult_main_consent.subject_identifier
+            encrypt_files(instance, subject_identifier)
 
 
 @receiver(post_save, weak=False, sender=ParentalConsentImage,
@@ -43,7 +46,8 @@ def adult_main_consent_image_on_post_save(sender, instance, raw, created, **kwar
 def parental_consent_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw:
         if created:
-            encrypt_files(instance)
+            subject_identifier = instance.parental_consent.subject_identifier
+            encrypt_files(instance, subject_identifier)
 
 
 @receiver(post_save, weak=False, sender=ContinuedParticipationImage,
@@ -51,7 +55,8 @@ def parental_consent_image_on_post_save(sender, instance, raw, created, **kwargs
 def continued_participation_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw:
         if created:
-            encrypt_files(instance)
+            subject_identifier = instance.continued_participation.subject_identifier
+            encrypt_files(instance, subject_identifier)
 
 
 @receiver(post_save, weak=False, sender=AssentImage,
@@ -59,15 +64,16 @@ def continued_participation_image_on_post_save(sender, instance, raw, created, *
 def assent_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw:
         if created:
-            encrypt_files(instance)
+            subject_identifier = instance.assent.subject_identifier
+            encrypt_files(instance, subject_identifier)
 
 
-def encrypt_files(instance):
+def encrypt_files(instance, subject_identifier):
     base_path = settings.MEDIA_ROOT
     if instance.image:
         upload_to = f'{instance.image.field.upload_to}'
         timestamp = datetime.timestamp(get_utcnow())
-        zip_filename = f'{instance.omang_copies.subject_identifier}_{timestamp}.zip'
+        zip_filename = f'{subject_identifier}_{timestamp}.zip'
         with open('filekey.key', 'r') as filekey:
             key = filekey.read().rstrip()
         com_lvl = 8
