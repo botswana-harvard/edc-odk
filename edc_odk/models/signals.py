@@ -7,14 +7,56 @@ from django.dispatch import receiver
 from edc_base.utils import get_utcnow
 
 from .omang_copies import NationalIdentityImage
+from .birth_certificate import BirthCertificateImage
+from .parental_consent import ParentalConsentImage
+from .adult_main_consent import AdultMainConsentImage
+from .continued_participation import ContinuedParticipationImage
+from .assent import AssentImage
 
 
 @receiver(post_save, weak=False, sender=NationalIdentityImage,
           dispatch_uid='maternal_dataset_on_post_save')
 def natinal_identity_image_on_post_save(sender, instance, raw, created, **kwargs):
-    """
-    -
-    """
+    if not raw:
+        if created:
+            encrypt_files(instance)
+
+
+@receiver(post_save, weak=False, sender=BirthCertificateImage,
+          dispatch_uid='maternal_dataset_on_post_save')
+def birth_certificate_image_on_post_save(sender, instance, raw, created, **kwargs):
+    if not raw:
+        if created:
+            encrypt_files(instance)
+
+
+@receiver(post_save, weak=False, sender=AdultMainConsentImage,
+          dispatch_uid='maternal_dataset_on_post_save')
+def adult_main_consent_image_on_post_save(sender, instance, raw, created, **kwargs):
+    if not raw:
+        if created:
+            encrypt_files(instance)
+
+
+@receiver(post_save, weak=False, sender=ParentalConsentImage,
+          dispatch_uid='maternal_dataset_on_post_save')
+def parental_consent_image_on_post_save(sender, instance, raw, created, **kwargs):
+    if not raw:
+        if created:
+            encrypt_files(instance)
+
+
+@receiver(post_save, weak=False, sender=ContinuedParticipationImage,
+          dispatch_uid='maternal_dataset_on_post_save')
+def continued_participation_image_on_post_save(sender, instance, raw, created, **kwargs):
+    if not raw:
+        if created:
+            encrypt_files(instance)
+
+
+@receiver(post_save, weak=False, sender=AssentImage,
+          dispatch_uid='maternal_dataset_on_post_save')
+def assent_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw:
         if created:
             encrypt_files(instance)
