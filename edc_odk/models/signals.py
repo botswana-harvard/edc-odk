@@ -23,7 +23,7 @@ def natinal_identity_image_on_post_save(sender, instance, raw, created, **kwargs
 
 
 @receiver(post_save, weak=False, sender=BirthCertificateImage,
-          dispatch_uid='maternal_dataset_on_post_save')
+          dispatch_uid='birth_certificate_on_post_save')
 def birth_certificate_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw and created:
         subject_identifier = instance.birth_certificate.subject_identifier
@@ -31,7 +31,7 @@ def birth_certificate_image_on_post_save(sender, instance, raw, created, **kwarg
 
 
 @receiver(post_save, weak=False, sender=AdultMainConsentImage,
-          dispatch_uid='maternal_dataset_on_post_save')
+          dispatch_uid='adult_main_consent_on_post_save')
 def adult_main_consent_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw and created:
         subject_identifier = instance.adult_main_consent.subject_identifier
@@ -39,7 +39,7 @@ def adult_main_consent_image_on_post_save(sender, instance, raw, created, **kwar
 
 
 @receiver(post_save, weak=False, sender=ParentalConsentImage,
-          dispatch_uid='maternal_dataset_on_post_save')
+          dispatch_uid='parental_consent_image_on_post_save')
 def parental_consent_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw and created:
         subject_identifier = instance.parental_consent.subject_identifier
@@ -47,7 +47,7 @@ def parental_consent_image_on_post_save(sender, instance, raw, created, **kwargs
 
 
 @receiver(post_save, weak=False, sender=ContinuedParticipationImage,
-          dispatch_uid='maternal_dataset_on_post_save')
+          dispatch_uid='continued_participation_image_on_post_save')
 def continued_participation_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw and created:
         subject_identifier = instance.continued_participation.subject_identifier
@@ -55,7 +55,7 @@ def continued_participation_image_on_post_save(sender, instance, raw, created, *
 
 
 @receiver(post_save, weak=False, sender=AssentImage,
-          dispatch_uid='maternal_dataset_on_post_save')
+          dispatch_uid='assent_image_on_post_save')
 def assent_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw and created:
         subject_identifier = instance.assent.subject_identifier
