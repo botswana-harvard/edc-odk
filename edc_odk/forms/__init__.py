@@ -9,3 +9,13 @@ from .omang_copies_form import OmangCopiesForm
 from .omang_copies_form import NationalIdentityImageForm
 from .specimen_consent_copies_form import SpecimenConsentCopiesForm
 from .specimen_consent_copies_form import SpecimenConsentImageForm
+from .adult_main_consent_form import AdultMainConsentForm
+from .adult_main_consent_form import AdultMainConsentImageForm
+from .assent_form import AssentForm
+from .assent_form import AssentImageForm
+from .continued_participation_form import ContinuedParticipationForm
+from .continued_participation_form import ContinuedParticipationImageForm
+from .parental_consent_form import ParentalConsentForm
+from .parental_consent_form import ParentalConsentImageForm
+from .birth_certificate_form import BirthCertificateForm
+from .birth_certificate_form import BirthCertificateImageForm

@@ -1,0 +1,12 @@
+<a id="birthcertificate_add_{{ subject_identifier }}"
+     title="{{ title }}"
+
+    {% if birth_certificate_model_obj %}
+        class="btn btn-success btn-sm" data-toggle="tooltip"  data-placement="right"
+        href="{{ add_birth_certificate_href }}">
+    {% else %}
+        class="btn btn-warning btn-sm" data-toggle="tooltip"  data-placement="right"
+        href="{{ add_birth_certificate_href }}">
+    {% endif %}
+        Birth Certificate
+</a>
