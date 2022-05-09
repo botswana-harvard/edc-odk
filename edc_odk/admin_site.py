@@ -6,6 +6,7 @@ class AdminSite(DjangoAdminSite):
     site_header = 'EDC ODK Forms'
     index_title = 'EDC ODK Forms'
     site_url = '/administration/'
+    enable_nav_sidebar = False
 
 
 edc_odk_admin = AdminSite(name='edc_odk_admin')
