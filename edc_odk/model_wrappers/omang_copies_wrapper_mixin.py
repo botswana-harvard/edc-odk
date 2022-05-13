@@ -24,6 +24,10 @@ class OmangCopiesModelWrapperMixin:
         """
         model_obj = self.omang_copies_model_obj or self.omang_copies_cls(
             **self.create_omang_copies_options)
+        if 'dashboard' in self.next_url_name:
+            next_url_name = self.next_url_name
+            return self.omang_copies_model_wrapper_cls(
+                model_obj=model_obj, next_url_name=next_url_name)
         return self.omang_copies_model_wrapper_cls(model_obj=model_obj)
 
     @property
