@@ -63,8 +63,6 @@ def parental_consent_image_on_post_save(sender, instance, raw, created, **kwargs
 def continued_participation_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw and created:
         stamp_image(instance)
-        subject_identifier = instance.continued_participation.subject_identifier
-        encrypt_files(instance, subject_identifier)
 
 
 @receiver(post_save, weak=False, sender=AssentImage,
@@ -72,8 +70,6 @@ def continued_participation_image_on_post_save(sender, instance, raw, created, *
 def assent_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw and created:
         stamp_image(instance)
-        subject_identifier = instance.assent.subject_identifier
-        encrypt_files(instance, subject_identifier)
 
 
 @receiver(post_save, weak=False, sender=ClinicianNotesImageArchive,
@@ -81,8 +77,6 @@ def assent_image_on_post_save(sender, instance, raw, created, **kwargs):
 def clinician_notes_image_archive_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw and created:
         stamp_image(instance)
-        subject_identifier = instance.clinician_notes.subject_identifier
-        encrypt_files(instance, subject_identifier)
 
 
 @receiver(post_save, weak=False, sender=ConsentImage,
@@ -99,8 +93,6 @@ def consent_image_on_post_save(sender, instance, raw, created, **kwargs):
 def continued_participation_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw and created:
         stamp_image(instance)
-        subject_identifier = instance.continued_participation.subject_identifier
-        encrypt_files(instance, subject_identifier)
 
 
 @receiver(post_save, weak=False, sender=LabResultsFile,
@@ -108,8 +100,6 @@ def continued_participation_image_on_post_save(sender, instance, raw, created, *
 def lab_results_file_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw and created:
         stamp_image(instance)
-        subject_identifier = instance.lab_results.subject_identifier
-        encrypt_files(instance, subject_identifier)
 
 
 @receiver(post_save, weak=False, sender=NoteToFileDocs,
@@ -117,8 +107,6 @@ def lab_results_file_on_post_save(sender, instance, raw, created, **kwargs):
 def note_to_file_docs_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw and created:
         stamp_image(instance)
-        subject_identifier = instance.notes_to_file.subject_identifier
-        encrypt_files(instance, subject_identifier)
 
 
 @receiver(post_save, weak=False, sender=SpecimenConsentImage,
@@ -126,8 +114,6 @@ def note_to_file_docs_on_post_save(sender, instance, raw, created, **kwargs):
 def specimen_consent_image_on_post_save(sender, instance, raw, created, **kwargs):
     if not raw and created:
         stamp_image(instance)
-        subject_identifier = instance.consent_copies.subject_identifier
-        encrypt_files(instance, subject_identifier)
 
 
 def encrypt_files(instance, subject_identifier):
