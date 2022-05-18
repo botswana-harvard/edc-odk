@@ -24,6 +24,10 @@ class SpecimenConsentModelWrapperMixin:
         """
         model_obj = self.specimen_consent_copies_model_obj or self.specimen_consent_copies_cls(
             **self.create_specimen_consent_copies_options)
+        if 'dashboard' in self.next_url_name:
+            next_url_name = self.next_url_name
+            return self.specimen_consent_copies_model_wrapper_cls(
+                model_obj=model_obj, next_url_name=next_url_name)
         return self.specimen_consent_copies_model_wrapper_cls(model_obj=model_obj)
 
     @property
