@@ -10,13 +10,13 @@ from edc_base.utils import get_utcnow
 from .adult_main_consent import AdultMainConsentImage
 from .assent import AssentImage
 from .birth_certificate import BirthCertificateImage
-from .continued_participation import ContinuedParticipationImage
-from .omang_copies import NationalIdentityImage
-from .parental_consent import ParentalConsentImage
 from .clinician_notes_archives import ClinicianNotesImageArchive
 from .consent_copies import ConsentImage
+from .continued_participation import ContinuedParticipationImage
 from .lab_results_files import LabResultsFile
 from .note_to_file import NoteToFileDocs
+from .omang_copies import NationalIdentityImage
+from .parental_consent import ParentalConsentImage
 from .specimen_consent_copies import SpecimenConsentImage
 import PIL
 from PIL import Image
@@ -141,7 +141,7 @@ def stamp_image(instance):
     add_image_stamp(image_path=path)
 
 
-def add_image_stamp(image_path=None, position=(25, 25), resize=(600, 600)):
+def add_image_stamp(image_path=None, position=(25, 25), resize=(100, 100)):
     """
     Superimpose image of a stamp over copy of the base image
     @param image_path: dir to base image
