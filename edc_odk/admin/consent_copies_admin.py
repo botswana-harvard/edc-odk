@@ -35,10 +35,10 @@ class ConsentCopiesAdmin(ModelAdminMixin, admin.ModelAdmin):
         (None, {
             'fields': [
                 'subject_identifier',
-                'version', ]}),
+                ]}),
         )
 
-    list_display = ('subject_identifier', 'version', 'created', )
+    list_display = ('subject_identifier', 'created', )
 
     inlines = [ConsentImageInline]
 
