@@ -138,7 +138,9 @@ def stamp_image(instance):
     filename = filefield.name  # gets the "normal" file name as it was uploaded
     storage = filefield.storage
     path = storage.path(filename)
-    add_image_stamp(image_path=path)
+    extension_path  = path.split('.')[1]
+    if extension_path != 'pdf':
+        add_image_stamp(image_path=path)
 
 
 def add_image_stamp(image_path=None, position=(25, 25), resize=(100, 100)):
