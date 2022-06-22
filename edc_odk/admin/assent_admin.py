@@ -1,11 +1,11 @@
 from django.contrib import admin
 from edc_model_admin import TabularInlineMixin
-from .stampimage_action_mixin import StampImageActionMixin
 
 from ..admin_site import edc_odk_admin
 from ..forms import AssentForm, AssentImageForm
 from ..models import Assent, AssentImage
 from .modeladmin_mixins import ModelAdminMixin
+from .stampimage_action_mixin import StampImageActionMixin
 
 
 class AssentImageInline(TabularInlineMixin, admin.TabularInline):
@@ -16,7 +16,7 @@ class AssentImageInline(TabularInlineMixin, admin.TabularInline):
     min_num = 1
 
     fields = ('assent_image', 'assent', 'image', 'user_uploaded',
-            'datetime_captured', 'modified', 'hostname_created',)
+              'datetime_captured', 'modified', 'hostname_created',)
 
     def get_readonly_fields(self, request, obj=None):
         fields = super().get_readonly_fields(request, obj)
@@ -35,10 +35,10 @@ class AssentAdmin(ModelAdminMixin, StampImageActionMixin, admin.ModelAdmin):
         (None, {
             'fields': [
                 'subject_identifier',
-            ]}
-        ),)
+            ]}),
+    )
 
-    list_display = ('subject_identifier', 'created', )
+    list_display = ('subject_identifier', 'created',)
 
     inlines = [AssentImageInline]
 
