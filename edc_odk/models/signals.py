@@ -151,7 +151,7 @@ def stamp_image(instance):
         add_image_stamp(image_path=path)
 
 
-def add_image_stamp(image_path=None, position=(25, 25), resize=(100, 100)):
+def add_image_stamp(image_path=None, position=(25, 25), resize=(150, 150)):
     """
     Superimpose image of a stamp over copy of the base image
     @param image_path: dir to base image
