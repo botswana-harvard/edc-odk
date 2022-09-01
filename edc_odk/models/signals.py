@@ -1,11 +1,14 @@
-import os
 from datetime import datetime
+import os
 
-import pyminizip
+from PIL import Image
+import PIL
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from edc_base.utils import get_utcnow
+
+import pyminizip
 
 from .adult_main_consent import AdultMainConsentImage
 from .assent import AssentImage
@@ -18,8 +21,6 @@ from .note_to_file import NoteToFileDocs
 from .omang_copies import NationalIdentityImage
 from .parental_consent import ParentalConsentImage
 from .specimen_consent_copies import SpecimenConsentImage
-import PIL
-from PIL import Image
 
 
 @receiver(post_save, weak=False, sender=NationalIdentityImage,
@@ -146,8 +147,7 @@ def stamp_image(instance):
     filename = filefield.name  # gets the "normal" file name as it was uploaded
     storage = filefield.storage
     path = storage.path(filename)
-    extension_path  = path.split('.')[1]
-    if extension_path != 'pdf':
+    if '.pdf' not in path:
         add_image_stamp(image_path=path)
 
 
