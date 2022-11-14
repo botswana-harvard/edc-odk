@@ -1,14 +1,15 @@
-from datetime import datetime
 import os
+from datetime import datetime
 
-from PIL import Image
 import PIL
+import img2pdf
+import pyminizip
+import pypdfium2 as pdfium
+from PIL import Image
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from edc_base.utils import get_utcnow
-
-import pyminizip
 
 from .adult_main_consent import AdultMainConsentImage
 from .assent import AssentImage
@@ -148,16 +149,21 @@ def stamp_image(instance):
     storage = filefield.storage
     path = storage.path(filename)
     if '.pdf' not in path:
-        add_image_stamp(image_path=path)
+        base_image=Image.open(path)
+        stamped_img = add_image_stamp(base_image=base_image)
+        stamped_img.save(path)
+    else:
+        print_pdf(path)
 
 
-def add_image_stamp(image_path=None, position=(25, 25), resize=(100, 100)):
+def add_image_stamp(base_image=None, position=(25, 25),
+        resize=(100, 100)):
     """
     Superimpose image of a stamp over copy of the base image
     @param image_path: dir to base image
+    @param dont_save: boolean for not saving the image just converting
     @param position: pixels(w,h) to superimpose stamp at
     """
-    base_image = Image.open(image_path)
     stamp = Image.open('media/stamp/true-copy.png')
     if resize:
         stamp = stamp.resize(resize, PIL.Image.ANTIALIAS)
@@ -178,4 +184,18 @@ def add_image_stamp(image_path=None, position=(25, 25), resize=(100, 100)):
 
     # paste stamp over image
     base_image.paste(stamp, position, mask=stamp)
-    base_image.save(image_path)
+    return base_image
+
+
+def print_pdf(filepath):
+    pdf = pdfium.PdfDocument(filepath)
+    page_indices = [i for i in range(len(pdf))]
+    renderer = pdf.render_to(
+        pdfium.BitmapConv.pil_image,
+        page_indices=page_indices,
+    )
+    stamped_pdf_images = []
+    for image, index in zip(renderer, page_indices):
+        stamped_pdf_images.append(add_image_stamp(base_image=image))
+    first_img = stamped_pdf_images[0]
+    first_img.save(filepath, save_all=True, append_images=stamped_pdf_images[1:])
