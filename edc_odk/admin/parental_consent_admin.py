@@ -1,6 +1,5 @@
 from django.contrib import admin
 from edc_model_admin import TabularInlineMixin
-from .stampimage_action_mixin import StampImageActionMixin
 
 from ..admin_site import edc_odk_admin
 from ..forms import ParentalConsentForm, ParentalConsentImageForm
@@ -29,7 +28,7 @@ class ParentalConsentImageInline(TabularInlineMixin, admin.TabularInline):
 
 
 @admin.register(ParentalConsent, site=edc_odk_admin)
-class ParentalConsentAdmin(ModelAdminMixin, StampImageActionMixin, admin.ModelAdmin):
+class ParentalConsentAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     form = ParentalConsentForm
 
@@ -40,7 +39,7 @@ class ParentalConsentAdmin(ModelAdminMixin, StampImageActionMixin, admin.ModelAd
             ]}
         ),)
 
-    list_display = ('subject_identifier', 'created', )
+    list_display = ('subject_identifier', 'created', 'verified_by', 'is_verified',)
 
     inlines = [ParentalConsentImageInline]
 

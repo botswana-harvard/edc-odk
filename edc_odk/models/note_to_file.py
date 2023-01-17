@@ -1,12 +1,14 @@
 from django.db import models
 from django.utils.html import mark_safe
-from edc_base.sites.site_model_mixin import SiteModelMixin
 from edc_base.model_mixins import BaseUuidModel
+from edc_base.sites.site_model_mixin import SiteModelMixin
 from edc_base.utils import get_utcnow
+from edc_consent.field_mixins import VerificationFieldsMixin
 from edc_identifier.model_mixins import UniqueSubjectIdentifierFieldMixin
 
 
-class NoteToFile(UniqueSubjectIdentifierFieldMixin, SiteModelMixin, BaseUuidModel):
+class NoteToFile(VerificationFieldsMixin,UniqueSubjectIdentifierFieldMixin,
+                 SiteModelMixin, BaseUuidModel):
 
     @property
     def related_objects(self):

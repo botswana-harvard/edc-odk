@@ -1,12 +1,10 @@
 from django.contrib import admin
 from edc_model_admin import TabularInlineMixin
-from .stampimage_action_mixin import StampImageActionMixin
 
 from ..admin_site import edc_odk_admin
 from ..forms import LabResultsFilesForm, LabResultsFileForm
 from ..models import LabResultsFiles, LabResultsFile
 from .modeladmin_mixins import ModelAdminMixin
-
 
 class LabResultsFileInline(TabularInlineMixin, admin.TabularInline):
 
@@ -27,8 +25,7 @@ class LabResultsFileInline(TabularInlineMixin, admin.TabularInline):
 
 
 @admin.register(LabResultsFiles, site=edc_odk_admin)
-class LabResultsFilesAdmin(
-        ModelAdminMixin, StampImageActionMixin, admin.ModelAdmin):
+class LabResultsFilesAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     form = LabResultsFilesForm
 
@@ -39,7 +36,7 @@ class LabResultsFilesAdmin(
             ]}
          ), )
 
-    list_display = ('subject_identifier', 'created', )
+    list_display = ('subject_identifier', 'created', 'verified_by', 'is_verified',)
 
     inlines = [LabResultsFileInline]
 

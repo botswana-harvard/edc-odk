@@ -1,6 +1,5 @@
 from django.contrib import admin
 from edc_model_admin import TabularInlineMixin
-from .stampimage_action_mixin import StampImageActionMixin
 
 from ..admin_site import edc_odk_admin
 from ..forms import ClinicianNotesImageArchiveForm, ClinicianNotesArchivesForm
@@ -27,7 +26,7 @@ class ClinicianNotesImageInline(TabularInlineMixin, admin.TabularInline):
 
 
 @admin.register(ClinicianNotesArchives, site=edc_odk_admin)
-class ClinicianNotesArchivesAdmin(ModelAdminMixin, StampImageActionMixin, admin.ModelAdmin):
+class ClinicianNotesArchivesAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     form = ClinicianNotesArchivesForm
 
@@ -38,7 +37,7 @@ class ClinicianNotesArchivesAdmin(ModelAdminMixin, StampImageActionMixin, admin.
             ]}
          ),)
 
-    list_display = ('subject_identifier', 'created', )
+    list_display = ('subject_identifier', 'created', 'verified_by', 'is_verified',)
 
     inlines = [ClinicianNotesImageInline]
 

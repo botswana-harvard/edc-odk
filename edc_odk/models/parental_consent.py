@@ -4,11 +4,11 @@ from edc_base.sites.site_model_mixin import SiteModelMixin
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.utils import get_utcnow
 from edc_identifier.model_mixins import NonUniqueSubjectIdentifierModelMixin
+from edc_consent.field_mixins import VerificationFieldsMixin
 
 
-class ParentalConsent(
-        NonUniqueSubjectIdentifierModelMixin, SiteModelMixin, BaseUuidModel):
-
+class ParentalConsent(VerificationFieldsMixin, NonUniqueSubjectIdentifierModelMixin,
+                      SiteModelMixin, BaseUuidModel):
     version = models.CharField(
         verbose_name='Consent version',
         max_length=10,
@@ -18,6 +18,7 @@ class ParentalConsent(
     def related_objects(self):
         return getattr(self, 'parental_consent_images')
 
+
     class Meta:
         app_label = 'edc_odk'
         verbose_name = 'Parental Consent For Child'
@@ -26,18 +27,17 @@ class ParentalConsent(
 
 
 class ParentalConsentImage(BaseUuidModel):
-
     parental_consent = models.ForeignKey(
         ParentalConsent,
         on_delete=models.PROTECT,
-        related_name='parental_consent_images',)
+        related_name='parental_consent_images', )
 
     image = models.FileField(upload_to='parental_consent_images/')
 
     user_uploaded = models.CharField(
         max_length=50,
         blank=True,
-        verbose_name='user uploaded',)
+        verbose_name='user uploaded', )
 
     datetime_captured = models.DateTimeField(
         default=get_utcnow)
