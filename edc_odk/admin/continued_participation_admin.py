@@ -1,6 +1,6 @@
 from django.contrib import admin
 from edc_model_admin import TabularInlineMixin
-from .stampimage_action_mixin import StampImageActionMixin
+
 
 from ..admin_site import edc_odk_admin
 from ..forms import ContinuedParticipationForm, ContinuedParticipationImageForm
@@ -29,7 +29,7 @@ class ContinuedParticipationImageInline(TabularInlineMixin, admin.TabularInline)
 
 
 @admin.register(ContinuedParticipation, site=edc_odk_admin)
-class ContinuedParticipationAdmin(ModelAdminMixin, StampImageActionMixin, admin.ModelAdmin):
+class ContinuedParticipationAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     form = ContinuedParticipationForm
 
@@ -40,7 +40,7 @@ class ContinuedParticipationAdmin(ModelAdminMixin, StampImageActionMixin, admin.
             ]}
         ),)
 
-    list_display = ('subject_identifier', 'created', )
+    list_display = ('subject_identifier', 'created', 'verified_by', 'is_verified',)
 
     inlines = [ContinuedParticipationImageInline]
 

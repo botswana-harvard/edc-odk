@@ -1,0 +1,43 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+{% block content %}
+    <style>
+        table {
+            border: 1px solid black;
+            height: 10vh;
+        }
+
+        .cell-border {
+            border: 1px solid black;
+        }
+    </style>
+    <table class="my-table-class">
+        <thead>
+        <tr>
+            <th class="cell-border"></th>
+            <th class="cell-border">All Caregivers</th>
+            <th class="cell-border">Missing Addult main Consent</th>
+            <th class="cell-border">Missing Parental Consent</th>
+            <th class="cell-border">Missing Omang Copies</th>
+            <th class="cell-border">Missing Note to Files</th>
+            <th class="cell-border">Missing Lab Results Files</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="cell-border">Total</td>
+            <td class="cell-border">{{ missing_adult_main_consent }}</td>
+            <td class="cell-border">{{ all_caregivers }}</td>
+            <td class="cell-border">{{ missing_parental_consent }}</td>
+            <td class="cell-border">{{ missing_omang_copies }}</td>
+            <td class="cell-border">{{ missing_note_to_files }}</td>
+            <td class="cell-border">{{ missing_lab_results_files }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <br>
+    <br>
+    {{ block.super }}
+{% endblock %}

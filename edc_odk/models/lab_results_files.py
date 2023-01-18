@@ -3,15 +3,17 @@ from django.utils.html import mark_safe
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.sites.site_model_mixin import SiteModelMixin
 from edc_base.utils import get_utcnow
+from edc_consent.field_mixins import VerificationFieldsMixin
 from edc_identifier.model_mixins import UniqueSubjectIdentifierFieldMixin
 
 
-class LabResultsFiles(
-        UniqueSubjectIdentifierFieldMixin, SiteModelMixin, BaseUuidModel):
+class LabResultsFiles(VerificationFieldsMixin, UniqueSubjectIdentifierFieldMixin,
+                      SiteModelMixin, BaseUuidModel):
 
     @property
     def related_objects(self):
         return getattr(self, 'lab_results')
+
 
     class Meta:
         app_label = 'edc_odk'
@@ -20,18 +22,17 @@ class LabResultsFiles(
 
 
 class LabResultsFile(BaseUuidModel):
-
     lab_results = models.ForeignKey(
         LabResultsFiles,
         on_delete=models.PROTECT,
-        related_name='lab_results',)
+        related_name='lab_results', )
 
     image = models.FileField(upload_to='lab_results/')
 
     user_uploaded = models.CharField(
         max_length=50,
         blank=True,
-        verbose_name='user uploaded',)
+        verbose_name='user uploaded', )
 
     datetime_captured = models.DateTimeField(
         default=get_utcnow)

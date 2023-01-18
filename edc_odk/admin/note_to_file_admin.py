@@ -39,6 +39,6 @@ class NoteToFileAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     inlines = [NoteToFileDocsInline]
 
-    list_display = ('subject_identifier', 'created',)
+    list_display = ('subject_identifier', 'created', 'verified_by', 'is_verified',)
 
     search_fields = ('subject_identifier', )
