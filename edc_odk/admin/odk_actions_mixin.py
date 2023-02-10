@@ -58,56 +58,36 @@ class ODKActionMixin:
         extra_context = extra_context or {}
         adult_reports = AdultReports()
         children_reports = ChildrenReports()
-        if 'adultmainconsent' in self.model._meta.model_name:
-            extra_context['data'] = adult_reports.missing_adult_main_consent
-            extra_context['all_caregivers'] = len(list(set(adult_reports.all_caregivers)))
+        model_name = self.model._meta.model_name
+        adult_reports_data = {
+            'adultmainconsent': (
+                adult_reports.missing_adult_main_consent, adult_reports.all_caregivers),
+            'omangcopies': (
+                adult_reports.missing_omang_copies, adult_reports.all_caregivers),
+            'parentalconsent': (
+                adult_reports.missing_parental_consent, adult_reports.all_caregivers),
+            'notetofiles': (
+                adult_reports.missing_note_to_files, adult_reports.all_caregivers),
+            'labresultsfiles': (
+                adult_reports.missing_lab_results_files, adult_reports.all_caregivers),
+            'specimenconsentcopies': (
+                adult_reports.missing_specimen_consent_copies,
+                adult_reports.all_caregivers),
+            'continuedparticipation': (children_reports.missing_continued_participation,
+                                       children_reports.all_caregivers),
+            'consentcopies': (
+                adult_reports.missing_consent_copies, adult_reports.all_caregivers),
+            'cliniciannotesarchives': (
+                adult_reports.missing_clinician_notes_archives,
+                adult_reports.all_caregivers),
+            'birthcertificate': (
+                children_reports.missing_birth_certificate,
+                children_reports.all_caregivers),
+            'assent': (children_reports.missing_assent, children_reports.all_caregivers)
+        }
 
-        if 'omangcopies' in self.model._meta.model_name:
-            extra_context['data'] = adult_reports.missing_omang_copies
-            extra_context['all_caregivers'] = len(list(set(adult_reports.all_caregivers)))
-
-        if 'parentalconsent' in self.model._meta.model_name:
-            extra_context['data'] = adult_reports.missing_parental_consent
-            extra_context['all_caregivers'] = len(list(set(adult_reports.all_caregivers)))
-
-        if 'notetofiles' in self.model._meta.model_name:
-            extra_context['data'] = adult_reports.missing_note_to_files
-            extra_context['all_caregivers'] = len(list(set(adult_reports.all_caregivers)))
-
-        if 'labresultsfiles' in self.model._meta.model_name:
-            extra_context['data'] = adult_reports.missing_lab_results_files
-            extra_context['all_caregivers'] = len(list(set(adult_reports.all_caregivers)))
-
-        if 'specimenconsentcopies' in self.model._meta.model_name:
-            extra_context['data'] = adult_reports.missing_specimen_consent_copies
-            extra_context['all_caregivers'] = len(list(set(adult_reports.all_caregivers)))
-
-        if 'parentalconsent' in self.model._meta.model_name:
-            extra_context['data'] = adult_reports.missing_parental_consent
-            extra_context['all_caregivers'] = len(list(set(adult_reports.all_caregivers)))
-
-        if 'continuedparticipation' in self.model._meta.model_name:
-            extra_context['data'] = children_reports.missing_continued_participation
-            extra_context['all_caregivers'] = len(list(set(children_reports.all_caregivers)))
-
-        if 'consentcopies' in self.model._meta.model_name:
-            extra_context['data'] = adult_reports.missing_consent_copies
-            extra_context['all_caregivers'] = len(list(set(adult_reports.all_caregivers)))
-
-
-        if 'cliniciannotesarchives' in self.model._meta.model_name:
-            extra_context['data'] = adult_reports.missing_clinician_notes_archives
-            extra_context['all_caregivers'] = len(list(set(adult_reports.all_caregivers)))
-
-
-        if 'birthcertificate' in self.model._meta.model_name:
-            extra_context['data'] = children_reports.missing_birth_certificate
-            extra_context['all_caregivers'] = len(list(set(children_reports.all_caregivers)))
-
-
-        if 'assent' in self.model._meta.model_name:
-            extra_context['data'] = children_reports.missing_assent
-            extra_context['all_caregivers'] = len(list(set(children_reports.all_caregivers)))
-
+        if model_name in adult_reports_data:
+            extra_context['data'], caregivers = adult_reports_data[model_name]
+            extra_context['all_caregivers'] = len(list(set(caregivers)))
 
         return super().changelist_view(request, extra_context=extra_context)
