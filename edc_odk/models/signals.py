@@ -157,7 +157,7 @@ def stamp_image(instance):
 
 
 def add_image_stamp(base_image=None, position=(25, 25),
-        resize=(150, 150)):
+        resize=(500, 500)):
     """
     Superimpose image of a stamp over copy of the base image
     @param image_path: dir to base image
@@ -173,13 +173,13 @@ def add_image_stamp(base_image=None, position=(25, 25),
 
     # Determine orientation of the base image before pasting stamp
     if width < height:
-        pos_width = round(width / 2) - round(stamp_width / 2)
+        pos_width = round(width ) - round(stamp_width )
         pos_height = height - stamp_height
         position = (pos_width, pos_height)
     elif width > height:
         stamp = stamp.rotate(90)
         pos_width = width - stamp_width
-        pos_height = round(height / 2) - round(stamp_height / 2)
+        pos_height = round(height ) - round(stamp_height)
         position = (pos_width, pos_height)
 
     # paste stamp over image
@@ -197,6 +197,6 @@ def print_pdf(filepath):
     )
     stamped_pdf_images = []
     for image, index in zip(renderer, page_indices):
-        stamped_pdf_images.append(add_image_stamp(base_image=image, resize=(300, 300)))
+        stamped_pdf_images.append(add_image_stamp(base_image=image))
     first_img = stamped_pdf_images[0]
     first_img.save(filepath, save_all=True, append_images=stamped_pdf_images[1:])

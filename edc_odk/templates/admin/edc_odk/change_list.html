@@ -15,23 +15,24 @@
         <thead>
         <tr>
             <th class="cell-border"></th>
-            <th class="cell-border">All Caregivers</th>
-            <th class="cell-border">Missing Addult main Consent</th>
-            <th class="cell-border">Missing Parental Consent</th>
-            <th class="cell-border">Missing Omang Copies</th>
-            <th class="cell-border">Missing Note to Files</th>
-            <th class="cell-border">Missing Lab Results Files</th>
+            <th class="cell-border">All Participants Evaluated</th>
+            <th class="cell-border" colspan="2">{{ opts.verbose_name_plural }}</th>
+        </tr>
+        <tr>
+            <th class="cell-border"></th>
+            <th class="cell-border"></th>
+            {% for key, value in data.items %}
+                <th class="cell-border">{{ key }}</th>
+            {% endfor %}
         </tr>
         </thead>
         <tbody>
         <tr>
             <td class="cell-border">Total</td>
-            <td class="cell-border">{{ missing_adult_main_consent }}</td>
             <td class="cell-border">{{ all_caregivers }}</td>
-            <td class="cell-border">{{ missing_parental_consent }}</td>
-            <td class="cell-border">{{ missing_omang_copies }}</td>
-            <td class="cell-border">{{ missing_note_to_files }}</td>
-            <td class="cell-border">{{ missing_lab_results_files }}</td>
+            {% for key, value in data.items %}
+                <td class="cell-border">{{ value }}</td>
+            {% endfor %}
         </tr>
         </tbody>
     </table>
