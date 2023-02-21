@@ -10,7 +10,7 @@ from edc_model_admin import (
     ModelAdminNextUrlRedirectMixin, ModelAdminReadOnlyMixin,
     ModelAdminRedirectOnDeleteMixin, ModelAdminNextUrlRedirectError)
 
-from .stampimage_action_mixin import StampImageActionMixin
+from .odk_actions_mixin import ODKActionMixin
 
 
 class ModelAdminMixin(
@@ -18,7 +18,7 @@ class ModelAdminMixin(
         ModelAdminFormAutoNumberMixin, ModelAdminRevisionMixin,
         ModelAdminAuditFieldsMixin, ModelAdminReadOnlyMixin,
         ModelAdminInstitutionMixin, ModelAdminRedirectOnDeleteMixin,
-        ModelAdminSiteMixin, StampImageActionMixin):
+        ModelAdminSiteMixin, ODKActionMixin):
 
     list_per_page = 10
     date_hierarchy = 'modified'

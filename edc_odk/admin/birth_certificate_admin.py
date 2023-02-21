@@ -1,12 +1,10 @@
 from django.contrib import admin
 from edc_model_admin import TabularInlineMixin
-from .stampimage_action_mixin import StampImageActionMixin
 
 from ..admin_site import edc_odk_admin
 from ..forms import BirthCertificateForm, BirthCertificateImageForm
 from ..models import BirthCertificate, BirthCertificateImage
 from .modeladmin_mixins import ModelAdminMixin
-
 
 class BirthCertificateImageInline(TabularInlineMixin, admin.TabularInline):
 
@@ -27,7 +25,7 @@ class BirthCertificateImageInline(TabularInlineMixin, admin.TabularInline):
 
 
 @admin.register(BirthCertificate, site=edc_odk_admin)
-class BirthCertificateAdmin(ModelAdminMixin, StampImageActionMixin, admin.ModelAdmin):
+class BirthCertificateAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     form = BirthCertificateForm
 
@@ -38,7 +36,7 @@ class BirthCertificateAdmin(ModelAdminMixin, StampImageActionMixin, admin.ModelA
             ]}
         ),)
 
-    list_display = ('subject_identifier', 'created', )
+    list_display = ('subject_identifier', 'created', 'verified_by', 'is_verified',)
 
     inlines = [BirthCertificateImageInline]
 

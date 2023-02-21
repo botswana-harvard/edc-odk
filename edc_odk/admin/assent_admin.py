@@ -5,7 +5,6 @@ from ..admin_site import edc_odk_admin
 from ..forms import AssentForm, AssentImageForm
 from ..models import Assent, AssentImage
 from .modeladmin_mixins import ModelAdminMixin
-from .stampimage_action_mixin import StampImageActionMixin
 
 
 class AssentImageInline(TabularInlineMixin, admin.TabularInline):
@@ -27,7 +26,7 @@ class AssentImageInline(TabularInlineMixin, admin.TabularInline):
 
 
 @admin.register(Assent, site=edc_odk_admin)
-class AssentAdmin(ModelAdminMixin, StampImageActionMixin, admin.ModelAdmin):
+class AssentAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     form = AssentForm
 
@@ -38,7 +37,7 @@ class AssentAdmin(ModelAdminMixin, StampImageActionMixin, admin.ModelAdmin):
             ]}),
     )
 
-    list_display = ('subject_identifier', 'created',)
+    list_display = ('subject_identifier', 'created', 'verified_by', 'is_verified',)
 
     inlines = [AssentImageInline]
 

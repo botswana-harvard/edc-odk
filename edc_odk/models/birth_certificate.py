@@ -1,17 +1,19 @@
 from django.db import models
 from django.utils.html import mark_safe
-from edc_base.sites.site_model_mixin import SiteModelMixin
 from edc_base.model_mixins import BaseUuidModel
+from edc_base.sites.site_model_mixin import SiteModelMixin
 from edc_base.utils import get_utcnow
+from edc_consent.field_mixins import VerificationFieldsMixin
 from edc_identifier.model_mixins import NonUniqueSubjectIdentifierModelMixin
 
 
-class BirthCertificate(
-        NonUniqueSubjectIdentifierModelMixin, SiteModelMixin, BaseUuidModel):
+class BirthCertificate(VerificationFieldsMixin, NonUniqueSubjectIdentifierModelMixin,
+                       SiteModelMixin, BaseUuidModel):
 
     @property
     def related_objects(self):
         return getattr(self, 'birth_certificate_images')
+
 
     class Meta:
         app_label = 'edc_odk'
@@ -20,18 +22,17 @@ class BirthCertificate(
 
 
 class BirthCertificateImage(BaseUuidModel):
-
     birth_certificate = models.ForeignKey(
         BirthCertificate,
         on_delete=models.PROTECT,
-        related_name='birth_certificate_images',)
+        related_name='birth_certificate_images', )
 
     image = models.FileField(upload_to='birth_certificate_images/')
 
     user_uploaded = models.CharField(
         max_length=50,
         blank=True,
-        verbose_name='user uploaded',)
+        verbose_name='user uploaded', )
 
     datetime_captured = models.DateTimeField(
         default=get_utcnow)

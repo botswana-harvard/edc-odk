@@ -1,0 +1,44 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+{% block content %}
+    <style>
+        table {
+            border: 1px solid black;
+            height: 10vh;
+        }
+
+        .cell-border {
+            border: 1px solid black;
+        }
+    </style>
+    <table class="my-table-class">
+        <thead>
+        <tr>
+            <th class="cell-border"></th>
+            <th class="cell-border">All Participants Evaluated</th>
+            <th class="cell-border" colspan="2">{{ opts.verbose_name_plural }}</th>
+        </tr>
+        <tr>
+            <th class="cell-border"></th>
+            <th class="cell-border"></th>
+            {% for key, value in data.items %}
+                <th class="cell-border">{{ key }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="cell-border">Total</td>
+            <td class="cell-border">{{ all_caregivers }}</td>
+            {% for key, value in data.items %}
+                <td class="cell-border">{{ value }}</td>
+            {% endfor %}
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <br>
+    <br>
+    {{ block.super }}
+{% endblock %}
